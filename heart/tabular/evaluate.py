@@ -94,3 +94,30 @@ def _transform_features(base_pipeline, X):
     return X_processed, feature_names
 
 
+def shap_feature_importance(calibrated_model, X_test, sample_size: int = 200) -> pd.DataFrame:
+    import shap
+
+    base_pipeline = _get_base_pipeline(calibrated_model)
+    X_processed, feature_names = _transform_features(base_pipeline, X_test)
+    X_sample = X_processed[:sample_size]
+
+    explainer = shap.TreeExplainer(base_pipeline.named_steps["classifier"])
+    shap_values = explainer(X_sample)
+
+    mean_abs_shap = np.abs(shap_values.values).mean(axis=0)
+    return pd.DataFrame({"feature": feature_names, "mean_abs_shap": mean_abs_shap}) \
+        .sort_values("mean_abs_shap", ascending=False).reset_index(drop=True)
+
+
+def permutation_feature_importance(calibrated_model, X_test, y_test, n_repeats: int = 10) -> pd.DataFrame:
+    base_pipeline = _get_base_pipeline(calibrated_model)
+    X_processed, feature_names = _transform_features(base_pipeline, X_test)
+
+    result = permutation_importance(
+        base_pipeline.named_steps["classifier"], X_processed, y_test,
+        n_repeats=n_repeats, random_state=42, n_jobs=-1,
+    )
+    return pd.DataFrame({"feature": feature_names, "importance_mean": result.importances_mean}) \
+        .sort_values("importance_mean", ascending=False).reset_index(drop=True)
+
+
