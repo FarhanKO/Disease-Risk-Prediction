@@ -75,3 +75,18 @@ def add_custom_features(X_df: pd.DataFrame) -> pd.DataFrame:
 FEATURE_ENGINEERING = FunctionTransformer(add_custom_features)
 
 
+def load_raw_data(csv_path: str | Path) -> pd.DataFrame:
+    """Load the raw CSV, drop rows with no target, drop id + correlation-dropped columns."""
+    df = pd.read_csv(csv_path)
+    df = df.dropna(subset=[TARGET_COLUMN])
+    df = df.drop(columns=["participant_id", *CORRELATION_DROPPED_COLUMNS], errors="ignore")
+    return df
+
+
+def get_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
+    """Split a cleaned dataframe into raw features and binary target."""
+    X = df.drop(columns=[TARGET_COLUMN, STAGE_COLUMN], errors="ignore")
+    y = df[TARGET_COLUMN].astype(int)
+    return X, y
+
+
