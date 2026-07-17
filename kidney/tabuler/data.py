@@ -90,3 +90,28 @@ def get_X_y(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     return X, y
 
 
+def split_data(X: pd.DataFrame, y: pd.Series):
+    """Stratified train/test split, matching the notebook's split exactly."""
+    return train_test_split(
+        X, y, test_size=TEST_SIZE, random_state=RANDOM_STATE, stratify=y
+    )
+
+
+def build_column_transformer() -> ColumnTransformer:
+    """Numeric (KNN-impute + RobustScale) / categorical (mode-impute + OHE) branches."""
+    numeric_sub_pipeline = Pipeline(steps=[
+        ("imputer", KNNImputer(n_neighbors=5)),
+        ("scaler", RobustScaler()),
+    ])
+
+    categorical_sub_pipeline = Pipeline(steps=[
+        ("imputer", SimpleImputer(strategy="most_frequent")),
+        ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=False)),
+    ])
+
+    return ColumnTransformer(transformers=[
+        ("num_transform", numeric_sub_pipeline, NUMERICAL_FEATURES),
+        ("cat_transform", categorical_sub_pipeline, CATEGORICAL_FEATURES),
+    ])
+
+
