@@ -1,3 +1,8 @@
+"""
+data.py — Data loading, cleaning, feature engineering, and preprocessing
+for the heart disease tabular module.
+"""
+
 from pathlib import Path
 
 import pandas as pd
