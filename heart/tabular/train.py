@@ -25,3 +25,7 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 
+from src.data import RANDOM_STATE, build_pipeline, get_X_y, load_raw_data, split_data
+
+CV_STRATEGY = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
+
