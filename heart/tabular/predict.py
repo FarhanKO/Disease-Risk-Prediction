@@ -32,3 +32,12 @@ def load_model(model_path: Union[str, Path] = DEFAULT_MODEL_PATH):
     return _model_cache
 
 
+def load_threshold(metadata_path: Union[str, Path] = DEFAULT_METADATA_PATH, default: float = 0.5) -> float:
+    """Read the clinically optimized decision threshold saved by evaluate.py."""
+    path = Path(metadata_path)
+    if path.exists():
+        with open(path) as f:
+            return json.load(f).get("optimal_threshold", default)
+    return default
+
+
