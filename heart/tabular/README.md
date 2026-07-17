@@ -36,3 +36,42 @@ tabular/
 └── models/              # saved .joblib artifacts + metadata.json (gitignored/LFS if large)
 ```
 
+## Usage
+
+```bash
+pip install -r requirements.txt
+
+# Train and calibrate
+python -m src.train --data-path data/heart_disease.csv \
+    --model-out models/heart_tabular_calibrated.joblib
+
+# Evaluate — also writes models/metadata.json with the optimal threshold
+python -m src.evaluate --data-path data/heart_disease.csv \
+    --model-path models/heart_tabular_calibrated.joblib
+
+# Predict on new patients
+python -m src.predict --input patient.json \
+    --model-path models/heart_tabular_calibrated.joblib
+```
+
+```python
+# Or import directly (what Streamlit does)
+from src.predict import predict_single
+
+result = predict_single({
+    "age": 63, "sex": "Male", "dataset": "Cleveland", "cp": "typical angina",
+    "trestbps": 145, "chol": 233, "fbs": True, "restecg": "normal",
+    "thalch": 150, "exang": False, "oldpeak": 2.3, "slope": "downsloping",
+    "ca": 0, "thal": "fixed defect",
+})
+# {'heart_disease_probability': 0.71, 'prediction': 1, 'risk_level': 'High Risk'}
+```
+
+## Notes
+
+- `predict.py` only needs raw clinical columns — feature engineering and
+  preprocessing happen inside the saved pipeline itself.
+- Risk bands: <0.20 Low, <0.50 Medium, ≥0.50 High (fixed, independent of the
+  cost-optimized decision threshold used for the binary `prediction` field).
+- No anomaly-detection gate here — that's a Stage 1 concern for the top-level
+  `cascade/` module, not this module's stable interface.
