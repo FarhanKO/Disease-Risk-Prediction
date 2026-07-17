@@ -41,3 +41,31 @@ def load_threshold(metadata_path: Union[str, Path] = DEFAULT_METADATA_PATH, defa
     return default
 
 
+def _risk_level(probability: float) -> str:
+    if probability < 0.20:
+        return "Low Risk"
+    elif probability < 0.50:
+        return "Medium Risk"
+    return "High Risk"
+
+
+def _validate_columns(df: pd.DataFrame):
+    missing = [c for c in REQUIRED_COLUMNS if c not in df.columns]
+    if missing:
+        raise ValueError(f"Missing required columns: {missing}")
+
+
+def predict(patients: pd.DataFrame, model=None, threshold: Optional[float] = None) -> pd.DataFrame:
+    """Run inference for one or more patients, returning probability/prediction/risk band."""
+    _validate_columns(patients)
+    model = model or load_model()
+    threshold = threshold if threshold is not None else load_threshold()
+
+    probabilities = model.predict_proba(patients)[:, 1]
+    return pd.DataFrame({
+        "heart_disease_probability": probabilities,
+        "prediction": (probabilities >= threshold).astype(int),
+        "risk_level": [_risk_level(p) for p in probabilities],
+    })
+
+
