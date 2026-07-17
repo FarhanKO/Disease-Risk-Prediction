@@ -115,3 +115,14 @@ def build_column_transformer() -> ColumnTransformer:
     ])
 
 
+def build_pipeline(estimator) -> ImbPipeline:
+    """
+    Full training pipeline: feature engineering -> preprocessing -> SMOTE -> classifier.
+    Used directly inside GridSearchCV for every model in train.py.
+    """
+    return ImbPipeline(steps=[
+        ("engineering", FEATURE_ENGINEERING),
+        ("transformations", build_column_transformer()),
+        ("smote", SMOTE(random_state=RANDOM_STATE)),
+        ("classifier", estimator),
+    ])
