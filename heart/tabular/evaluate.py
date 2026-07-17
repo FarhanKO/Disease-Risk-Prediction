@@ -120,4 +120,60 @@ def permutation_feature_importance(calibrated_model, X_test, y_test, n_repeats: 
     return pd.DataFrame({"feature": feature_names, "importance_mean": result.importances_mean}) \
         .sort_values("importance_mean", ascending=False).reset_index(drop=True)
 
+def main():
+    parser = argparse.ArgumentParser(description="Evaluate the calibrated heart disease model.")
+    parser.add_argument("--data-path", required=True)
+    parser.add_argument("--model-path", default="models/heart_tabular_calibrated.joblib")
+    parser.add_argument("--metadata-out", default="models/metadata.json")
+    parser.add_argument("--bootstrap-iterations", type=int, default=1000)
+    args = parser.parse_args()
 
+    df = load_raw_data(args.data_path)
+    X, y = get_X_y(df)
+    _, X_test, _, y_test = split_data(X, y)
+
+    model = joblib.load(args.model_path)
+    preds = model.predict(X_test)
+    probas = model.predict_proba(X_test)[:, 1]
+
+    metrics = core_metrics(y_test, preds, probas)
+    print("=== Core Metrics (default 0.5 threshold) ===")
+    for k, v in metrics.items():
+        print(f"{k}: {v}")
+
+    optimal_threshold = find_optimal_threshold(y_test, probas)
+    optimal_preds = (probas >= optimal_threshold).astype(int)
+    optimal_metrics = core_metrics(y_test, optimal_preds, probas)
+    print(f"\n=== Metrics at Cost-Optimal Threshold ({optimal_threshold:.4f}) ===")
+    for k, v in optimal_metrics.items():
+        print(f"{k}: {v}")
+
+    brier = calibration_brier_score(y_test, probas)
+    print(f"\nBrier Score: {brier:.4f}")
+
+    print("\n=== 95% Bootstrapped Confidence Intervals ===")
+    ci_results = bootstrap_confidence_intervals(y_test, preds, probas, args.bootstrap_iterations)
+    print(ci_results)
+
+    print("\n=== Top 10 SHAP Features ===")
+    print(shap_feature_importance(model, X_test).head(10))
+
+    print("\n=== Top 10 Permutation Importance Features ===")
+    print(permutation_feature_importance(model, X_test, y_test).head(10))
+
+    metadata = {
+        "optimal_threshold": optimal_threshold,
+        "brier_score": brier,
+        "metrics_at_default_threshold": metrics,
+        "metrics_at_optimal_threshold": optimal_metrics,
+        "bootstrap_confidence_intervals": ci_results,
+    }
+    out_path = Path(args.metadata_out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "w") as f:
+        json.dump(metadata, f, indent=2)
+    print(f"\n[SAVED] Evaluation metadata -> {out_path}")
+
+
+if __name__ == "__main__":
+    main()
