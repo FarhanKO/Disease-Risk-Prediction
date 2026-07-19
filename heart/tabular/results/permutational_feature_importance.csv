@@ -1,0 +1,11 @@
+Index,Feature,Importance_Mean
+15,cp_asymptomatic,0.029891
+8,age_st_interaction,0.016848
+5,ca,0.014130
+25,exang_True,0.014130
+16,cp_atypical angina,0.012500
+24,exang_False,0.011957
+30,thal_normal,0.011413
+4,oldpeak,0.011413
+2,chol,0.010870
+12,dataset_Hungary,0.010326
