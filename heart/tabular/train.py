@@ -1,9 +1,11 @@
 """
 train.py — Trains and compares 8 classifiers, calibrates the winner, and
-saves the deployable artifact.
+saves both cascade artifacts:
+    Stage 1 (Anomaly Gate):   models/heart_anomaly_pipeline.joblib
+    Stage 2 (Classification): models/heart_disease_calibrated_catboost.joblib
 
 CLI:
-    python -m src.train --data-path data/heart_disease.csv --model-out models/heart_tabular_calibrated.joblib
+    python -m src.train --data-path data/heart_disease.csv
 """
 
 import argparse
@@ -14,7 +16,8 @@ import numpy as np
 import pandas as pd
 from catboost import CatBoostClassifier
 from sklearn.calibration import CalibratedClassifierCV
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import IsolationForest, RandomForestClassifier
+from sklearn.impute import KNNImputer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import (accuracy_score, auc, average_precision_score,
                               f1_score, precision_score, recall_score, roc_curve)
@@ -22,10 +25,13 @@ from sklearn.model_selection import GridSearchCV, StratifiedKFold
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.neural_network import MLPClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.tree import DecisionTreeClassifier
 from xgboost import XGBClassifier
 
-from src.data import RANDOM_STATE, build_pipeline, get_X_y, load_raw_data, split_data
+from src.data import (NUMERICAL_FEATURES, RANDOM_STATE, add_custom_features,
+                       build_pipeline, get_X_y, load_raw_data, split_data)
 
 CV_STRATEGY = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 
@@ -144,16 +150,43 @@ def calibrate(best_pipeline, X_train, y_train):
     return calibrated
 
 
+def build_anomaly_pipeline() -> Pipeline:
+    """Stage 1 of the cascade: flags extreme/implausible clinical profiles."""
+    return Pipeline(steps=[
+        ("imputer", KNNImputer(n_neighbors=5)),
+        ("scaler", StandardScaler()),
+        ("detector", IsolationForest(contamination=0.05, random_state=RANDOM_STATE)),
+    ])
+
+
+def fit_anomaly_pipeline(X_train: pd.DataFrame) -> Pipeline:
+    """
+    Fits Stage 1 on NUMERICAL_FEATURES (6 raw + 3 engineered).
+
+    get_X_y() strips the 3 engineered columns out of X (Stage 2's own pipeline
+    recomputes them internally via its `engineering` step), so X_train doesn't
+    have them yet. Stage 1 has no such step, so they're computed explicitly
+    here before fitting — mirrors what the notebook did for the cascade demo
+    patients in cell 97.
+    """
+    X_engineered = add_custom_features(X_train)
+    anomaly_pipeline = build_anomaly_pipeline()
+    anomaly_pipeline.fit(X_engineered[NUMERICAL_FEATURES])
+    return anomaly_pipeline
+
+
 def main():
     parser = argparse.ArgumentParser(description="Train and calibrate the heart disease tabular model.")
     parser.add_argument("--data-path", required=True, help="Path to the heart disease CSV.")
-    parser.add_argument("--model-out", default="models/heart_tabular_calibrated.joblib")
+    parser.add_argument("--model-out", default="models/heart_disease_calibrated_catboost.joblib")
+    parser.add_argument("--anomaly-model-out", default="models/heart_anomaly_pipeline.joblib")
     args = parser.parse_args()
 
     df = load_raw_data(args.data_path)
     X, y = get_X_y(df)
     X_train, X_test, y_train, y_test = split_data(X, y)
 
+    # --- Stage 2: supervised model selection + calibration ---
     fitted_grids = {}
     for name, (estimator, param_grid) in MODEL_CONFIGS.items():
         fitted_grids[name] = run_grid_search(name, estimator, param_grid, X_train, y_train)
@@ -168,10 +201,18 @@ def main():
     best_pipeline = fitted_grids[best_name].best_estimator_
     calibrated_model = calibrate(best_pipeline, X_train, y_train)
 
-    out_path = Path(args.model_out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    joblib.dump(calibrated_model, out_path)
-    print(f"\n[SAVED] Calibrated {best_name} model -> {out_path}")
+    model_out_path = Path(args.model_out)
+    model_out_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(calibrated_model, model_out_path)
+    print(f"\n[SAVED] Calibrated {best_name} model -> {model_out_path}")
+
+    # --- Stage 1: anomaly gate, fit on the same training split ---
+    anomaly_pipeline = fit_anomaly_pipeline(X_train)
+
+    anomaly_out_path = Path(args.anomaly_model_out)
+    anomaly_out_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(anomaly_pipeline, anomaly_out_path)
+    print(f"[SAVED] Stage 1 anomaly-gate pipeline -> {anomaly_out_path}")
 
 
 if __name__ == "__main__":
