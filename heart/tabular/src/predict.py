@@ -26,6 +26,8 @@ from typing import Optional, Union
 import joblib
 import pandas as pd
 
+from src.data import NUMERICAL_FEATURES, add_custom_features
+
 MODEL_DIR = Path(__file__).resolve().parent.parent / "models"
 
 # NOTE: heart_disease_calibrated_catboost.joblib is what's actually committed
@@ -107,8 +109,12 @@ def predict(
 
     # --- STAGE 1: Anomaly Gate ---
     # anomaly_model is a fitted Pipeline(imputer -> scaler -> IsolationForest)
-    # expecting the same raw numeric + engineered columns it was trained on.
-    anomaly_labels = anomaly_model.predict(patients)  # -1 = anomaly, 1 = normal
+    # expecting exactly NUMERICAL_FEATURES (6 raw + 3 engineered), in that
+    # order — the same columns train.py's fit_anomaly_pipeline() used.
+    # add_custom_features() is required here since `patients` only carries
+    # raw clinical columns; the 3 engineered ones don't exist until computed.
+    engineered = add_custom_features(patients)
+    anomaly_labels = anomaly_model.predict(engineered[NUMERICAL_FEATURES])  # -1 = anomaly, 1 = normal
     is_anomaly = anomaly_labels == -1
 
     n = len(patients)
