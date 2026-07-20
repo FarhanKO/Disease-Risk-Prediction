@@ -95,3 +95,26 @@ def _transform_features(base_pipeline, X):
     except AttributeError:
         feature_names = [f"feature_{i}" for i in range(X_processed.shape[1])]
     return X_processed, feature_names
+
+def shap_feature_importance(calibrated_model, X_test, sample_size: int = 200) -> pd.DataFrame:
+    import shap
+ 
+    base_pipeline = _get_base_pipeline(calibrated_model)
+    X_processed, feature_names = _transform_features(base_pipeline, X_test)
+    X_sample = X_processed[:sample_size]
+    clf = base_pipeline.named_steps["classifier"]
+ 
+    try:
+        # Fast path for tree-based winners (RF, XGBoost, LightGBM, DecisionTree)
+        explainer = shap.TreeExplainer(clf)
+        shap_values = explainer(X_sample).values
+    except Exception:
+        # Generic fallback for LR / KNN / NB / SVM / MLP — slower but always works
+        background = X_sample[:50]
+        explainer = shap.Explainer(clf.predict_proba, background)
+        raw_values = explainer(X_sample).values
+        shap_values = raw_values[..., 1] if raw_values.ndim == 3 else raw_values
+ 
+    mean_abs_shap = np.abs(shap_values).mean(axis=0)
+    return pd.DataFrame({"feature": feature_names, "mean_abs_shap": mean_abs_shap}) \
+        .sort_values("mean_abs_shap", ascending=False).reset_index(drop=True)
