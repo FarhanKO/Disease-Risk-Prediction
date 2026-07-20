@@ -79,3 +79,19 @@ def bootstrap_confidence_intervals(y_test, preds, probas, n_iterations: int = 10
  
 def calibration_brier_score(y_test, probas) -> float:
     return float(brier_score_loss(y_test, probas))
+
+def _get_base_pipeline(calibrated_model):
+    """Pull a fitted base pipeline out of a CalibratedClassifierCV for SHAP/permutation use."""
+    return calibrated_model.calibrated_classifiers_[0].estimator
+ 
+ 
+def _transform_features(base_pipeline, X):
+    X_eng = base_pipeline.named_steps["engineering"].transform(X)
+    X_processed = base_pipeline.named_steps["transformations"].transform(X_eng)
+    if hasattr(X_processed, "toarray"):
+        X_processed = X_processed.toarray()
+    try:
+        feature_names = [n.split("__")[-1] for n in base_pipeline.named_steps["transformations"].get_feature_names_out()]
+    except AttributeError:
+        feature_names = [f"feature_{i}" for i in range(X_processed.shape[1])]
+    return X_processed, feature_names
