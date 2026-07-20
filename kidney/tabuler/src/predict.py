@@ -79,3 +79,19 @@ def predict_single(patient: dict, model=None, threshold: Optional[float] = None)
     return predict(df, model=model, threshold=threshold).iloc[0].to_dict()
 
 
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run kidney disease risk prediction.")
+    parser.add_argument("--input", required=True, help="JSON file: a single patient object or a list of them.")
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
+    parser.add_argument("--threshold", type=float, default=None)
+    args = parser.parse_args()
+
+    with open(args.input) as f:
+        payload = json.load(f)
+    records = payload if isinstance(payload, list) else [payload]
+
+    model = load_model(args.model_path)
+    output = predict(pd.DataFrame(records), model=model, threshold=args.threshold)
+    print(output.to_string(index=False))
