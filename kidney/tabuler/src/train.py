@@ -107,3 +107,84 @@ MODEL_CONFIGS = {
 }
 
 
+def run_grid_search(name, estimator, param_grid, X_train, y_train):
+    grid = GridSearchCV(
+        estimator=build_pipeline(estimator),
+        param_grid=param_grid,
+        cv=CV_STRATEGY,
+        scoring="recall",
+        n_jobs=-1,
+    )
+    grid.fit(X_train, y_train)
+    print(f"[{name}] best CV recall: {grid.best_score_:.4f}")
+    return grid
+
+
+def compare_models(fitted_grids: dict, X_test, y_test) -> pd.DataFrame:
+    rows = []
+    for name, grid in fitted_grids.items():
+        model = grid.best_estimator_
+        preds = model.predict(X_test)
+        try:
+            probas = model.predict_proba(X_test)[:, 1]
+            roc_auc = auc(*roc_curve(y_test, probas)[:2])
+            pr_auc = average_precision_score(y_test, probas)
+        except (AttributeError, NotImplementedError):
+            roc_auc, pr_auc = np.nan, np.nan
+
+        rows.append({
+            "Model": name,
+            "Accuracy": accuracy_score(y_test, preds),
+            "Precision": precision_score(y_test, preds, zero_division=0),
+            "Recall": recall_score(y_test, preds, zero_division=0),
+            "F1-Score": f1_score(y_test, preds, zero_division=0),
+            "ROC-AUC": roc_auc,
+            "PR-AUC": pr_auc,
+        })
+    return pd.DataFrame(rows).set_index("Model")
+
+
+def select_best(comparison_df: pd.DataFrame) -> str:
+    """Recall first (clinical priority), precision as tiebreaker — matches notebook."""
+    ranked = comparison_df.sort_values(by=["Recall", "Precision"], ascending=[False, False])
+    return ranked.index[0]
+
+
+def calibrate(best_pipeline, X_train, y_train):
+    calibrated = CalibratedClassifierCV(estimator=best_pipeline, method="isotonic", cv=3)
+    calibrated.fit(X_train, y_train)
+    return calibrated
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Train and calibrate the kidney disease tabular model.")
+    parser.add_argument("--data-path", required=True, help="Path to the CKD_NHANES CSV.")
+    parser.add_argument("--model-out", default="models/kidney_tabular_calibrated.joblib")
+    args = parser.parse_args()
+
+    df = load_raw_data(args.data_path)
+    X, y = get_X_y(df)
+    X_train, X_test, y_train, y_test = split_data(X, y)
+
+    fitted_grids = {}
+    for name, (estimator, param_grid) in MODEL_CONFIGS.items():
+        fitted_grids[name] = run_grid_search(name, estimator, param_grid, X_train, y_train)
+
+    comparison_df = compare_models(fitted_grids, X_test, y_test)
+    print("\n=== Model Comparison (Test Set) ===")
+    print(comparison_df.round(4))
+
+    best_name = select_best(comparison_df)
+    print(f"\nBest model: {best_name}")
+
+    best_pipeline = fitted_grids[best_name].best_estimator_
+    calibrated_model = calibrate(best_pipeline, X_train, y_train)
+
+    out_path = Path(args.model_out)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    joblib.dump(calibrated_model, out_path)
+    print(f"\n[SAVED] Calibrated {best_name} model -> {out_path}")
+
+
+if __name__ == "__main__":
+    main()
