@@ -24,3 +24,23 @@ from sklearn.impute import KNNImputer, SimpleImputer
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, RobustScaler
+
+RANDOM_STATE = 42
+TEST_SIZE = 0.2
+TARGET_COLUMN = "ckd_present"
+STAGE_COLUMN = "ckd_stage"  # multi-class staging metadata, not used by the binary classifier
+ 
+# Dropped for >0.85 correlation with height/BMI on the reference dataset (see module docstring)
+CORRELATION_DROPPED_COLUMNS = ["weight_kg"]
+ 
+CATEGORICAL_FEATURES = ["gender", "ethnicity"]
+BASE_NUMERICAL_FEATURES = [
+    "age", "education_level", "poverty_income_ratio", "bmi", "height_cm",
+    "bp_systolic", "bp_diastolic", "serum_creatinine", "blood_urea_nitrogen",
+    "albumin_serum", "phosphorus", "bicarbonate", "calcium", "uric_acid",
+    "urine_creatinine", "urine_albumin", "albumin_creatinine_ratio",
+    "diabetes_diagnosed", "insulin_use", "diabetes_pills", "ever_smoked",
+    "current_smoker", "egfr",
+]
+ENGINEERED_FEATURES = ["pulse_pressure", "map", "bun_cr_ratio", "ca_p_product", "bmi_bp_interaction"]
+NUMERICAL_FEATURES = BASE_NUMERICAL_FEATURES + ENGINEERED_FEATURES
