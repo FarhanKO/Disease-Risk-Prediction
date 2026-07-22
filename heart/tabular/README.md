@@ -7,7 +7,7 @@ fusion submodules, orchestrated by a top-level cascade).
 Ported from `Heart_Diseases.ipynb`, refactored into an importable, CLI-capable
 package. The notebook is retained for EDA only — `src/` is the canonical pipeline.
 
-## What it does
+## What it does 
 
 - Engineers 3 clinical features on top of the raw UCI heart disease columns:
   `max_hr_ratio`, `bp_hr_index`, `age_st_interaction`.
