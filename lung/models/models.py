@@ -50,3 +50,9 @@ def load_lung_models():
 
     return models
 
+if __name__ == "__main__":
+    loaded_models = load_lung_models()
+    print("\nLoaded Models:")
+
+    for model_name in loaded_models:
+        print("-", model_name)
