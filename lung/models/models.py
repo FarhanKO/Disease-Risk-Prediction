@@ -8,3 +8,8 @@ they exceed GitHub's file size limits.
 Download models and place them inside the models/ directory.
 """
 
+import os
+from tensorflow.keras.models import load_model
+
+MODEL_DIR = "models"
+
