@@ -35,3 +35,18 @@ MODEL_PATHS = {
         MODEL_DIR, "ResNet50_FT_best.keras"
     )
 }
+
+def load_lung_models():
+    models = {}
+    for name, path in MODEL_PATHS.items():
+
+        if os.path.exists(path):
+            print(f"Loading {name}...")
+            models[name] = load_model(path)
+
+        else:
+            print(f"Missing model: {name}")
+            print(f"Expected location: {path}")
+
+    return models
+
