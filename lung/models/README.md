@@ -1,6 +1,6 @@
 # Trained Models
 
-The trained `.keras` files are not stored in GitHub because of file size limitations.
+The trained `.keras` files are not stored in GitHub because of large file size limitations.
 
 Download them from:
 
