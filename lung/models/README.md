@@ -2,7 +2,7 @@
 
 The trained `.keras` files are not stored in GitHub because of large file size limitations.
 
-Download them from:
+Download them from google drive.
 
 MODEL DOWNLOAD LINK: https://drive.google.com/drive/folders/16-xnF2kkFHDjFObZEXpDXa0mAJp3zXtf
 
