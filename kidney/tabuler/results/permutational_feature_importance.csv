@@ -1,1 +1,11 @@
-
+Index,Feature,Importance_Mean
+22,egfr,0.234311
+0,age,0.124089
+16,albumin_creatinine_ratio,0.058609
+11,bicarbonate,0.031504
+8,blood_urea_nitrogen,0.019858
+13,uric_acid,0.013825
+9,albumin_serum,0.007876
+7,serum_creatinine,0.007164
+25,bun_cr_ratio,0.005656
+10,phosphorus,0.005614
