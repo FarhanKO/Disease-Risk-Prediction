@@ -1,0 +1,77 @@
+{
+  "class_names": [
+    "Abnormal_Heartbeat",
+    "History_of_MI",
+    "Myocardial_Infarction",
+    "Normal"
+  ],
+  "img_size": [
+    256,
+    448
+  ],
+  "preprocessing": "RGB; crop 2213x1572 printouts to GRID_BOX; resize to 448x256 (BOX); float 0-255 - each model rescales internally",
+  "printout_size": [
+    2213,
+    1572
+  ],
+  "grid_box": [
+    68,
+    283,
+    2177,
+    1518
+  ],
+  "best_model": "ResNet50V2_FT",
+  "selection": "highest validation macro-F1, then lowest validation loss",
+  "ensemble_members": [
+    "ResNet50V2_FT",
+    "EfficientNetB0_FT",
+    "DenseNet121_FT"
+  ],
+  "confidence_threshold": 0.75,
+  "test_metrics": {
+    "accuracy": 0.8783783783783784,
+    "macro_f1": 0.8501305970149253,
+    "macro_roc_auc": 0.9746004678381728,
+    "log_loss": 0.3725057825207516,
+    "accuracy_95ci": [
+      0.7972972972972973,
+      0.9459459459459459
+    ],
+    "macro_f1_95ci": [
+      0.6646404964030398,
+      0.9471865351629503
+    ]
+  },
+  "ensemble_test_metrics": {
+    "val_macro_f1": 0.795381318515647,
+    "accuracy": 0.8918918918918919,
+    "macro_f1": 0.8895070745562965,
+    "macro_roc_auc": 0.9713453213453214,
+    "log_loss": 0.5265970511232203
+  },
+  "confidence_coverage": {
+    "threshold": 0.75,
+    "coverage": 0.7162162162162162,
+    "accuracy_accepted": 0.9622641509433962,
+    "accuracy_flagged": 0.6666666666666666
+  },
+  "ood_gate": {
+    "method": "mean cosine distance to 5 nearest training embeddings",
+    "threshold": 0.4629722471237182,
+    "rejected": {
+      "Validation ECGs": 0.0,
+      "Test ECGs": 0.0,
+      "Random noise": 1.0,
+      "Blank white page": 1.0,
+      "Grey speckle on white": 1.0,
+      "Chest X-rays (lung dataset)": 1.0,
+      "Charts (heart tabular plots)": 1.0
+    }
+  },
+  "dataset": {
+    "unique_ecgs": 491,
+    "train": 343,
+    "val": 74,
+    "test": 74
+  }
+}
