@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Streamlit cache
+.streamlit/
+
+# Trained checkpoints (large) - see README
+*.keras
+*.h5
+
+# Dataset images (~470 MB) - rebuilt by data/build_ecg_dataset.py; the script and manifest stay in git
+data/*
+!data/build_ecg_dataset.py
+!data/manifest.csv
+
+# Logs
+*.log
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
