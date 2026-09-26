@@ -1,4 +1,4 @@
-# Heart Disease — Image-Based Module (12-lead ECG)
+# Heart Disease — Image-Based Module (ECG)
 
 Classifies a 12-lead ECG printout into four categories: **Abnormal Heartbeat,
 History of MI, Myocardial Infarction, Normal**. Part of the
