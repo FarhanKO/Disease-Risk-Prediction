@@ -1,0 +1,6 @@
+# For inference.py. Trained and tested with keras 3.14.1 and torch 2.11 (Python 3.13)
+keras>=3.8
+torch>=2.5
+numpy
+pillow
+huggingface_hub
