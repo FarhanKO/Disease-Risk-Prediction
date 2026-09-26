@@ -41,6 +41,8 @@ model-index:
             name: Test macro ROC-AUC
 ---
 
+# See the models here: https://huggingface.co/FarhanKO/heart-disease-prediction
+
 # 12-Lead ECG Classifier (ResNet50V2)
 
 Classifies a scanned 12-lead ECG printout into one of four classes:
