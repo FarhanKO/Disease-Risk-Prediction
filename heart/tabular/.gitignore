@@ -20,13 +20,14 @@ env/
 # Streamlit cache
 .streamlit/
 
-# Model files (optional)
-*.pkl
-*.joblib
+# Raw NHANES .xpt downloads — rebuilt by data/build_heart_nhanes.py
+data/raw/
 
-# Raw dataset — download instructions are in data/README.md, not committed here
-data/*.csv
-data/*.zip
+# Scratch files written by CatBoost / pytabkit during training
+catboost_info/
+rtdl_checkpoints/
+notebook/catboost_info/
+notebook/rtdl_checkpoints/
 
 # Logs
 *.log
@@ -34,11 +35,6 @@ data/*.zip
 # Operating System
 .DS_Store
 Thumbs.db
-
-# Build files
-build/
-dist/
-*.egg-info/
 
 # Environment variables
 .env
