@@ -40,10 +40,12 @@ image_based/
 │   ├── predict.py                # the shared predict() / predict_batch() interface (common/image.py)
 │   └── evaluate.py               # re-scores the test split, checks it matches the notebook's metadata.json
 ├── data/
+│   ├── README.md                 # dataset card: source, citation, processing, manifest columns, caveats
 │   ├── build_ecg_dataset.py      # dedupe + crop + stratified split of the Mendeley zip
 │   ├── manifest.csv              # every kept image: split, source file, MD5, dropped duplicates
 │   └── train/ val/ test/<class>/ # built by the script (not in git)
 ├── models/                       # *.keras (not in git), heart_ecg_ood_detector.joblib, metadata.json
+│                                 # + Hugging Face files: README.md (model card), inference.py, requirements.txt, ood_gate.npz
 ├── results/                      # model_comparison.csv, classification_report.csv, training_history.json
 └── images/                       # every plot the notebook produces
 ```
