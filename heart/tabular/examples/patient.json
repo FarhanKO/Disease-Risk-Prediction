@@ -1,0 +1,11 @@
+{
+  "age": 67, "gender": "Male", "ethnicity": "Non-Hispanic White", "education_level": 2,
+  "poverty_income_ratio": 1.3, "bmi": 31.5, "waist_cm": 112, "height_cm": 175,
+  "systolic_bp": 158, "diastolic_bp": 84, "resting_heart_rate": 82,
+  "total_cholesterol": 240, "hdl_cholesterol": 34, "hba1c": 7.9, "serum_creatinine": 1.4,
+  "uric_acid": 7.6, "albumin_creatinine_ratio": 85, "white_blood_cells": 8.9,
+  "hemoglobin": 13.4, "rdw": 14.8, "smoking_status": "Current", "physically_active": "No",
+  "hypertension_history": "Yes", "high_cholesterol_history": "Yes", "diabetes_status": "Yes",
+  "stroke_history": "No", "family_history_chd": "Yes", "general_health": 4,
+  "chest_pain_type": "Exertional", "severe_chest_pain": "Yes", "sob_on_exertion": "Yes"
+}
