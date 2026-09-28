@@ -1,14 +1,14 @@
 """
-evaluate.py — Post-training evaluation for the calibrated kidney disease model:
-core metrics, cost-based threshold optimization, calibration check (Brier score),
-bootstrapped confidence intervals, SHAP and permutation feature importance.
+evaluate.py — Evaluates the trained kidney cascade on the held-out test split:
+metrics at the saved threshold, bootstrapped 95 % confidence intervals, Brier
+score, the Stage 1 gate's rejection rates, SHAP and permutation importance.
 
-Note: unlike the heart module (always CatBoost), the kidney winner can be
-any of 9 model types, so SHAP falls back from TreeExplainer to a generic
-Explainer when the winning model isn't tree-based.
+The threshold is NOT re-tuned here: train.py chose it on out-of-fold training
+predictions, and tuning it on the test set would make these numbers optimistic.
 
-CLI:
-    python -m src.evaluate --data-path data/kidney_disease.csv --model-path models/kidney_tabular_calibrated.joblib
+CLI (run from kidney/tabular/):
+    python -m src.evaluate
+    python -m src.evaluate --importance-out results/permutational_feature_importance.csv
 """
 
 import argparse
@@ -19,13 +19,13 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.inspection import permutation_importance
-from sklearn.metrics import (accuracy_score, auc, average_precision_score,
-                              brier_score_loss, confusion_matrix, f1_score,
-                              precision_recall_curve, precision_score,
-                              recall_score, roc_auc_score, roc_curve)
+from sklearn.metrics import (accuracy_score, average_precision_score, brier_score_loss, confusion_matrix,
+                             f1_score, precision_score, recall_score, roc_auc_score)
 from sklearn.utils import resample
 
-from src.data import get_X_y, load_raw_data, split_data
+from .data import DEFAULT_DATA_PATH, RANDOM_STATE, get_X_y, load_raw_data, split_data
+from .predict import DEFAULT_ANOMALY_MODEL_PATH, DEFAULT_METADATA_PATH, DEFAULT_MODEL_PATH, load_threshold
+from .train import N_JOBS
 
 
 def core_metrics(y_test, preds, probas) -> dict:
@@ -34,161 +34,140 @@ def core_metrics(y_test, preds, probas) -> dict:
         "accuracy": accuracy_score(y_test, preds),
         "precision": precision_score(y_test, preds, zero_division=0),
         "recall": recall_score(y_test, preds, zero_division=0),
+        "specificity": tn / (tn + fp),
         "f1_score": f1_score(y_test, preds, zero_division=0),
-        "roc_auc": auc(*roc_curve(y_test, probas)[:2]),
+        "roc_auc": roc_auc_score(y_test, probas),
         "pr_auc": average_precision_score(y_test, probas),
         "false_negatives": int(fn),
         "false_positives": int(fp),
     }
 
 
-def find_optimal_threshold(y_test, probas, fn_cost: float = 5, fp_cost: float = 1) -> float:
-    """
-    Clinical cost function: false negatives (missed CKD) are weighted
-    `fn_cost`x more than false positives (false alarms). Returns the
-    probability cutoff that minimizes total cost.
-    """
-    precisions, recalls, thresholds = precision_recall_curve(y_test, probas)
-    cost = fn_cost * (1 - recalls[:-1]) + fp_cost * (1 - precisions[:-1])
-    best_idx = np.argmin(cost)
-    return float(thresholds[best_idx])
-
-
 def bootstrap_confidence_intervals(y_test, preds, probas, n_iterations: int = 1000) -> dict:
-    """95% CI for recall, ROC-AUC, and PR-AUC via resampling with replacement."""
-    y_test_array = np.asarray(y_test)
-    n_size = len(y_test_array)
-
-    recalls, roc_aucs, pr_aucs = [], [], []
+    """95 % CI for recall, precision, ROC-AUC and PR-AUC via resampling the test set."""
+    y_true, preds, probas = np.asarray(y_test), np.asarray(preds), np.asarray(probas)
+    samples = {"recall": [], "precision": [], "roc_auc": [], "pr_auc": []}
     for i in range(n_iterations):
-        idx = resample(np.arange(n_size), replace=True, n_samples=n_size, random_state=i)
-        y_true_b, y_pred_b, y_proba_b = y_test_array[idx], preds[idx], probas[idx]
-        if len(np.unique(y_true_b)) < 2:
+        idx = resample(np.arange(len(y_true)), replace=True, random_state=i)
+        if len(np.unique(y_true[idx])) < 2:
             continue
-        recalls.append(recall_score(y_true_b, y_pred_b, zero_division=0))
-        roc_aucs.append(roc_auc_score(y_true_b, y_proba_b))
-        pr_aucs.append(average_precision_score(y_true_b, y_proba_b))
-
-    def ci(values):
-        return {
-            "mean": float(np.mean(values)),
-            "lower_95": float(np.percentile(values, 2.5)),
-            "upper_95": float(np.percentile(values, 97.5)),
-        }
-
-    return {"recall": ci(recalls), "roc_auc": ci(roc_aucs), "pr_auc": ci(pr_aucs)}
+        samples["recall"].append(recall_score(y_true[idx], preds[idx], zero_division=0))
+        samples["precision"].append(precision_score(y_true[idx], preds[idx], zero_division=0))
+        samples["roc_auc"].append(roc_auc_score(y_true[idx], probas[idx]))
+        samples["pr_auc"].append(average_precision_score(y_true[idx], probas[idx]))
+    return {k: {"mean": float(np.mean(v)), "ci_lower": float(np.percentile(v, 2.5)),
+                "ci_upper": float(np.percentile(v, 97.5))} for k, v in samples.items()}
 
 
 def calibration_brier_score(y_test, probas) -> float:
-    return float(brier_score_loss(y_test, probas))
+    return brier_score_loss(y_test, probas)
 
 
-def _get_base_pipeline(calibrated_model):
-    """Pull a fitted base pipeline out of a CalibratedClassifierCV for SHAP/permutation use."""
-    return calibrated_model.calibrated_classifiers_[0].estimator
-
-
-def _transform_features(base_pipeline, X):
-    X_eng = base_pipeline.named_steps["engineering"].transform(X)
-    X_processed = base_pipeline.named_steps["transformations"].transform(X_eng)
-    if hasattr(X_processed, "toarray"):
-        X_processed = X_processed.toarray()
-    try:
-        feature_names = [n.split("__")[-1] for n in base_pipeline.named_steps["transformations"].get_feature_names_out()]
-    except AttributeError:
-        feature_names = [f"feature_{i}" for i in range(X_processed.shape[1])]
-    return X_processed, feature_names
-
-
-def shap_feature_importance(calibrated_model, X_test, sample_size: int = 200) -> pd.DataFrame:
+def shap_feature_importance(calibrated_model, X_train, X_test, sample_size: int = 300) -> pd.DataFrame | None:
+    """Mean |SHAP| per encoded feature, with the explainer matched to the model type."""
     import shap
+    from catboost import CatBoostClassifier
+    from lightgbm import LGBMClassifier
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.tree import DecisionTreeClassifier
+    from xgboost import XGBClassifier
 
-    base_pipeline = _get_base_pipeline(calibrated_model)
-    X_processed, feature_names = _transform_features(base_pipeline, X_test)
-    X_sample = X_processed[:sample_size]
-    clf = base_pipeline.named_steps["classifier"]
+    pipeline = calibrated_model.estimator            # the fitted best pipeline train.py calibrated
+    if not hasattr(pipeline, "named_steps"):
+        print("[SKIP] SHAP: the selected model is an ensemble without a single classifier step.")
+        return None
 
-    try:
-        # Fast path for tree-based winners (RF, XGBoost, LightGBM, DecisionTree)
-        explainer = shap.TreeExplainer(clf)
-        shap_values = explainer(X_sample).values
-    except Exception:
-        # Generic fallback for LR / KNN / NB / SVM / MLP — slower but always works
-        background = X_sample[:50]
-        explainer = shap.Explainer(clf.predict_proba, background)
-        raw_values = explainer(X_sample).values
-        shap_values = raw_values[..., 1] if raw_values.ndim == 3 else raw_values
+    model = pipeline.named_steps["classifier"]
+    preprocessor = pipeline[:-1]                     # samplers are skipped at transform time
+    names = list(pipeline.named_steps["encoding"].get_feature_names_out())
+    background = shap.sample(preprocessor.transform(X_train), 200, random_state=RANDOM_STATE)
+    X_sample = preprocessor.transform(X_test)[:sample_size]
 
-    mean_abs_shap = np.abs(shap_values).mean(axis=0)
-    return pd.DataFrame({"feature": feature_names, "mean_abs_shap": mean_abs_shap}) \
-        .sort_values("mean_abs_shap", ascending=False).reset_index(drop=True)
+    if isinstance(model, (XGBClassifier, LGBMClassifier, CatBoostClassifier, RandomForestClassifier, DecisionTreeClassifier)):
+        values = shap.TreeExplainer(model)(X_sample)
+    elif isinstance(model, LogisticRegression):
+        values = shap.LinearExplainer(model, background)(X_sample)
+    else:
+        scorer = model.predict_proba if hasattr(model, "predict_proba") else model.decision_function
+        explainer = shap.explainers.Permutation(
+            lambda d: scorer(d)[:, 1] if hasattr(model, "predict_proba") else scorer(d),
+            shap.maskers.Independent(background, max_samples=50))
+        values = explainer(X_sample[:100], max_evals=2 * X_sample.shape[1] + 1, silent=True)
+
+    shap_values = values.values[..., 1] if values.values.ndim == 3 else values.values
+    return (pd.DataFrame({"feature": names, "mean_abs_shap": np.abs(shap_values).mean(axis=0)})
+            .sort_values("mean_abs_shap", ascending=False).reset_index(drop=True))
 
 
 def permutation_feature_importance(calibrated_model, X_test, y_test, n_repeats: int = 10) -> pd.DataFrame:
-    base_pipeline = _get_base_pipeline(calibrated_model)
-    X_processed, feature_names = _transform_features(base_pipeline, X_test)
-
-    result = permutation_importance(
-        base_pipeline.named_steps["classifier"], X_processed, y_test,
-        n_repeats=n_repeats, random_state=42, n_jobs=-1,
-    )
-    return pd.DataFrame({"feature": feature_names, "importance_mean": result.importances_mean}) \
-        .sort_values("importance_mean", ascending=False).reset_index(drop=True)
+    """Shuffle each raw input column through the full calibrated pipeline; drop in PR-AUC."""
+    result = permutation_importance(calibrated_model, X_test, y_test, scoring="average_precision",
+                                    n_repeats=n_repeats, random_state=RANDOM_STATE, n_jobs=N_JOBS)
+    return (pd.DataFrame({"Feature": X_test.columns, "Importance_Mean": result.importances_mean,
+                          "Importance_Std": result.importances_std})
+            .sort_values("Importance_Mean", ascending=False).reset_index(drop=True))
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Evaluate the calibrated kidney disease model.")
-    parser.add_argument("--data-path", required=True)
-    parser.add_argument("--model-path", default="models/kidney_tabular_calibrated.joblib")
-    parser.add_argument("--metadata-out", default="models/metadata.json")
+    parser = argparse.ArgumentParser(description="Evaluate the kidney (CKD) cascade on the test split.")
+    parser.add_argument("--data-path", default=str(DEFAULT_DATA_PATH))
+    parser.add_argument("--model-path", default=str(DEFAULT_MODEL_PATH))
+    parser.add_argument("--anomaly-model-path", default=str(DEFAULT_ANOMALY_MODEL_PATH))
+    parser.add_argument("--metadata-path", default=str(DEFAULT_METADATA_PATH))
+    parser.add_argument("--importance-out", default=None, help="Optional CSV for permutation importance.")
     parser.add_argument("--bootstrap-iterations", type=int, default=1000)
     args = parser.parse_args()
 
-    df = load_raw_data(args.data_path)
-    X, y = get_X_y(df)
-    _, X_test, _, y_test = split_data(X, y)
+    X, y = get_X_y(load_raw_data(args.data_path))
+    X_train, X_test, y_train, y_test = split_data(X, y)
 
     model = joblib.load(args.model_path)
-    preds = model.predict(X_test)
+    gate = joblib.load(args.anomaly_model_path)
+    threshold = load_threshold(args.metadata_path)
+
     probas = model.predict_proba(X_test)[:, 1]
+    preds = (probas >= threshold).astype(int)
 
     metrics = core_metrics(y_test, preds, probas)
-    print("=== Core Metrics (default 0.5 threshold) ===")
+    print(f"=== Test metrics at the saved threshold ({threshold:.4f}) ===")
     for k, v in metrics.items():
-        print(f"{k}: {v}")
-
-    optimal_threshold = find_optimal_threshold(y_test, probas)
-    optimal_preds = (probas >= optimal_threshold).astype(int)
-    optimal_metrics = core_metrics(y_test, optimal_preds, probas)
-    print(f"\n=== Metrics at Cost-Optimal Threshold ({optimal_threshold:.4f}) ===")
-    for k, v in optimal_metrics.items():
-        print(f"{k}: {v}")
+        print(f"{k:16s}: {v:.4f}" if isinstance(v, float) else f"{k:16s}: {v}")
 
     brier = calibration_brier_score(y_test, probas)
-    print(f"\nBrier Score: {brier:.4f}")
+    brier_reference = calibration_brier_score(y_test, np.full(len(y_test), y_train.mean()))
+    print(f"\nBrier score: {brier:.4f} (always-predict-prevalence reference: {brier_reference:.4f})")
 
-    print("\n=== 95% Bootstrapped Confidence Intervals ===")
-    ci_results = bootstrap_confidence_intervals(y_test, preds, probas, args.bootstrap_iterations)
-    print(ci_results)
+    flagged = gate.predict(X_test) == -1
+    gate_rates = {"overall": float(flagged.mean()),
+                  "ckd": float(flagged[np.asarray(y_test) == 1].mean()),
+                  "no_ckd": float(flagged[np.asarray(y_test) == 0].mean())}
+    print(f"Stage 1 gate rejection rate: {gate_rates}")
 
-    print("\n=== Top 10 SHAP Features ===")
-    print(shap_feature_importance(model, X_test).head(10))
+    ci = bootstrap_confidence_intervals(y_test, preds, probas, args.bootstrap_iterations)
+    print("\n=== 95% bootstrapped confidence intervals ===")
+    for k, v in ci.items():
+        print(f"{k:10s}: {v['mean']:.3f} ({v['ci_lower']:.3f} - {v['ci_upper']:.3f})")
 
-    print("\n=== Top 10 Permutation Importance Features ===")
-    print(permutation_feature_importance(model, X_test, y_test).head(10))
+    shap_df = shap_feature_importance(model, X_train, X_test)
+    if shap_df is not None:
+        print("\n=== Top 10 SHAP features ===")
+        print(shap_df.head(10).to_string(index=False))
 
-    metadata = {
-        "optimal_threshold": optimal_threshold,
-        "brier_score": brier,
-        "metrics_at_default_threshold": metrics,
-        "metrics_at_optimal_threshold": optimal_metrics,
-        "bootstrap_confidence_intervals": ci_results,
-    }
-    out_path = Path(args.metadata_out)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(out_path, "w") as f:
-        json.dump(metadata, f, indent=2)
-    print(f"\n[SAVED] Evaluation metadata -> {out_path}")
+    perm_df = permutation_feature_importance(model, X_test, y_test)
+    print("\n=== Top 10 permutation importance (raw inputs) ===")
+    print(perm_df.head(10).to_string(index=False))
+    if args.importance_out:
+        Path(args.importance_out).parent.mkdir(parents=True, exist_ok=True)
+        perm_df.to_csv(args.importance_out, index=False)
+        print(f"[SAVED] {args.importance_out}")
+
+    metadata_path = Path(args.metadata_path)
+    metadata = json.loads(metadata_path.read_text()) if metadata_path.exists() else {}
+    metadata.update({"test_metrics_at_threshold": metrics, "brier_score": brier,
+                     "bootstrap_confidence_intervals": ci, "anomaly_gate_rejection_rate": gate_rates})
+    metadata_path.write_text(json.dumps(metadata, indent=2, default=float))
+    print(f"\n[SAVED] Evaluation results -> {metadata_path}")
 
 
 if __name__ == "__main__":
