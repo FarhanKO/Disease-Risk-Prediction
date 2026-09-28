@@ -20,13 +20,20 @@ env/
 # Streamlit cache
 .streamlit/
 
-# Model files (optional)
+# Trained artifacts in models/ are committed (src/predict.py serves them);
+# ignore stray pickles anywhere else
 *.pkl
 *.joblib
+!models/*.joblib
 
-# Raw dataset — download instructions are in data/README.md, not committed here
-data/*.csv
+# The NHANES export in data/ is public domain and committed; ignore archives only
 data/*.zip
+
+# Scratch files written by CatBoost / pytabkit during training
+catboost_info/
+rtdl_checkpoints/
+notebook/catboost_info/
+notebook/rtdl_checkpoints/
 
 # Logs
 *.log
