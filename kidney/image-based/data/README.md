@@ -11,7 +11,6 @@ into train / val / test so that no patient scan appears in more than one split.
 | Dataset | *CT KIDNEY DATASET: Normal-Cyst-Tumor and Stone* |
 | Paper | Islam, M. N., Hasan, M., et al. "Vision transformer and explainable transfer learning models for auto detection of kidney cyst, stone and tumor from CT-radiography." *Scientific Reports* 12, 11440 (2022) |
 | Original release | Kaggle — `nazmul0087/ct-kidney-dataset-normal-cyst-tumor-and-stone` [https://www.kaggle.com/datasets/nazmul0087/ct-kidney-dataset-normal-cyst-tumor-and-stone] |
-| Copy used here | Hugging Face mirror `ryfkn/CT-Kidney-Dataset-{Cyst,Normal,Stone,Tumor}`: one parquet per class (Normal in two parts), full-resolution originals with their original file names (`Cyst- (1)`, …), ~1.6 GB |
 | Origin | Hospital PACS in Dhaka, Bangladesh; axial and coronal abdominal CT, exported as windowed JPEGs (not raw Hounsfield-unit DICOM) |
 | Labels | One diagnosis per image, assigned by the dataset authors (radiologist-confirmed reports) |
 
