@@ -1,8 +1,23 @@
 pandas
 numpy
-scikit-learn
+scikit-learn>=1.8
 imbalanced-learn
 xgboost
 lightgbm
+catboost
+interpret-core
 shap
 joblib
+psutil
+
+# Deep / foundation models (notebook, and src.train --include-deep); GPU recommended
+torch
+pytorch-tabnet
+pytabkit
+skorch
+tabpfn
+
+# Notebook-only (plots, anomaly detection)
+matplotlib
+seaborn
+pyod
