@@ -1,0 +1,9 @@
+# For inference.py. Trained and tested with keras 3.14.1, torch 2.11, scikit-learn 1.8.0 (Python 3.13)
+keras>=3.8
+torch>=2.5
+# The OOD gate is a pickled scikit-learn IsolationForest: use the same minor version to load it
+scikit-learn==1.8.*
+joblib
+numpy
+pillow
+huggingface_hub

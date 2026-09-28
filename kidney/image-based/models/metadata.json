@@ -1,0 +1,83 @@
+{
+  "class_names": [
+    "Cyst",
+    "Normal",
+    "Stone",
+    "Tumor"
+  ],
+  "img_size": [
+    224,
+    224
+  ],
+  "preprocessing": "grayscale; pad to square with black; resize to 224x224 (BOX); repeat to 3 channels; float 0-255 - each model rescales internally",
+  "best_model": "DenseNet121_FT",
+  "selection": "highest validation macro-F1, then lowest validation loss",
+  "split": "scan-series level (no CT series in more than one split)",
+  "ensemble_members": [
+    "ResNet50V2_FT",
+    "EfficientNetV2B0_FT",
+    "DenseNet121_FT",
+    "ConvNeXtTiny_FT"
+  ],
+  "confidence_threshold": 0.75,
+  "test_metrics": {
+    "accuracy": 0.8942361499720202,
+    "macro_f1": 0.867016310301131,
+    "macro_roc_auc": 0.9758629661028513,
+    "log_loss": 0.3480222960806383,
+    "accuracy_95ci_scan_bootstrap": [
+      0.8214178760354944,
+      0.95865221473335
+    ],
+    "macro_f1_95ci_scan_bootstrap": [
+      0.7006716911345909,
+      0.9120612468626422
+    ]
+  },
+  "ensemble_test_metrics": {
+    "val_macro_f1": 0.8683897406526349,
+    "accuracy": 0.8774482372691662,
+    "macro_f1": 0.8409821673918381,
+    "macro_roc_auc": 0.9825350413076568,
+    "log_loss": 0.3964112595593363
+  },
+  "confidence_coverage": {
+    "threshold": 0.75,
+    "coverage": 0.8130945719082261,
+    "accuracy_accepted": 0.9628355127322781,
+    "accuracy_flagged": 0.5958083832335329
+  },
+  "ood_gate": {
+    "method": "Isolation Forest",
+    "selection": "rejects >= 99% of every non-CT set, then fewest false rejections of validation CT slices",
+    "rejected": {
+      "Validation CT slices": 0.032,
+      "Test CT slices": 0.036000000000000004,
+      "Random noise": 1.0,
+      "All-black image": 1.0,
+      "Grey speckle on black": 1.0,
+      "Chest X-rays (lung dataset)": 1.0,
+      "ECG printouts (heart dataset)": 1.0
+    },
+    "alternative_rejected": {
+      "Validation CT slices": 0.073,
+      "Test CT slices": 0.19399999999999998,
+      "Random noise": 1.0,
+      "All-black image": 1.0,
+      "Grey speckle on black": 1.0,
+      "Chest X-rays (lung dataset)": 1.0,
+      "ECG printouts (heart dataset)": 1.0
+    }
+  },
+  "dataset": {
+    "unique_slices": 11929,
+    "scan_series": 189,
+    "train": 8353,
+    "val": 1789,
+    "test": 1787
+  },
+  "leakage_demo_1nn_accuracy": {
+    "random_split": 1.0,
+    "series_split": 0.45383324006715164
+  }
+}
