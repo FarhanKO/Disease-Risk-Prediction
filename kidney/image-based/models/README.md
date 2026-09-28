@@ -5,17 +5,6 @@
 Classifies a kidney CT slice into one of four classes: **Cyst, Normal, Stone,
 Tumor**.
 
-The trained weights (~1 GB) are too large for GitHub, so they are hosted on
-the Hugging Face Hub:
-
-**[`FarhanKO/kidney-ct-classifier`](https://huggingface.co/FarhanKO/kidney-ct-classifier)**
-
-These models are the image half of the kidney module in
-[Disease-Risk-Prediction](https://github.com/FarhanKO/Disease-Risk-Prediction)
-(`kidney/image_based/`). In the repo, this folder holds only this README, the
-OOD gate (`kidney_ct_ood_detector.joblib`) and `metadata.json`; the `.keras`
-files are git-ignored.
-
 > **Research and education only.** This is not a medical device. It was trained
 > on 123 CT scans from hospitals in one city and must not be used for diagnosis
 > or treatment decisions.
