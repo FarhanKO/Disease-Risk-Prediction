@@ -1,0 +1,118 @@
+{
+  "best_model": "LightGBM",
+  "selection_rule": "one-standard-error rule on 5-fold CV PR-AUC",
+  "target": "KDIGO: eGFR < 60 or urine ACR >= 30 (adults 20+)",
+  "removed_label_defining_features": [
+    "egfr",
+    "albumin_creatinine_ratio",
+    "serum_creatinine",
+    "urine_albumin",
+    "urine_creatinine"
+  ],
+  "optimal_threshold": 0.17498992770944613,
+  "cost_weights": {
+    "false_negative": 5,
+    "false_positive": 1
+  },
+  "risk_bands": {
+    "low": "< 0.1750",
+    "medium": "0.1750 - 0.50",
+    "high": ">= 0.50"
+  },
+  "raw_input_columns": [
+    "age",
+    "education_level",
+    "poverty_income_ratio",
+    "bmi",
+    "height_cm",
+    "bp_systolic",
+    "bp_diastolic",
+    "blood_urea_nitrogen",
+    "albumin_serum",
+    "phosphorus",
+    "bicarbonate",
+    "calcium",
+    "uric_acid",
+    "gender",
+    "ethnicity",
+    "insulin_use",
+    "diabetes_pills",
+    "diabetes",
+    "smoking_status"
+  ],
+  "numerical_features": [
+    "age",
+    "education_level",
+    "poverty_income_ratio",
+    "bmi",
+    "height_cm",
+    "bp_systolic",
+    "bp_diastolic",
+    "blood_urea_nitrogen",
+    "albumin_serum",
+    "phosphorus",
+    "bicarbonate",
+    "calcium",
+    "uric_acid",
+    "pulse_pressure",
+    "map",
+    "ca_p_product",
+    "bmi_bp_interaction"
+  ],
+  "categorical_features": [
+    "gender",
+    "ethnicity",
+    "insulin_use",
+    "diabetes_pills",
+    "diabetes",
+    "smoking_status"
+  ],
+  "test_metrics": {
+    "roc_auc": 0.833999914220154,
+    "pr_auc": 0.6240222574938868,
+    "recall_at_threshold": 0.7535545023696683,
+    "precision_at_threshold": 0.40253164556962023
+  },
+  "training_rows": 4378,
+  "test_rows": 1095,
+  "prevalence": 0.19276448017540654,
+  "test_metrics_at_threshold": {
+    "accuracy": 0.736986301369863,
+    "precision": 0.40253164556962023,
+    "recall": 0.7535545023696683,
+    "specificity": 0.7330316742081447,
+    "f1_score": 0.5247524752475248,
+    "roc_auc": 0.833999914220154,
+    "pr_auc": 0.6240222574938868,
+    "false_negatives": 52,
+    "false_positives": 236
+  },
+  "brier_score": 0.10946545097918957,
+  "bootstrap_confidence_intervals": {
+    "recall": {
+      "mean": 0.7542658684428605,
+      "ci_lower": 0.6977462686567165,
+      "ci_upper": 0.8100236318407961
+    },
+    "precision": {
+      "mean": 0.40090979486633815,
+      "ci_lower": 0.3530779639175258,
+      "ci_upper": 0.4476903802157098
+    },
+    "roc_auc": {
+      "mean": 0.8342437030292579,
+      "ci_lower": 0.8020015667045047,
+      "ci_upper": 0.8632479559628676
+    },
+    "pr_auc": {
+      "mean": 0.6247051403142557,
+      "ci_lower": 0.5589084542650921,
+      "ci_upper": 0.687038389458388
+    }
+  },
+  "anomaly_gate_rejection_rate": {
+    "overall": 0.01643835616438356,
+    "ckd": 0.061611374407582936,
+    "no_ckd": 0.005656108597285068
+  }
+}

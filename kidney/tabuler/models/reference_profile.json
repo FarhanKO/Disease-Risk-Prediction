@@ -1,0 +1,24 @@
+{
+  "source": "training split (80 %) of data/CKD_NHANES.csv (adults 20+ with a KDIGO label)",
+  "values": {
+    "age": 58.0,
+    "education_level": 4.0,
+    "poverty_income_ratio": 2.94,
+    "bmi": 28.5,
+    "height_cm": 166.6,
+    "bp_systolic": 120.0,
+    "bp_diastolic": 74.0,
+    "blood_urea_nitrogen": 14.0,
+    "albumin_serum": 4.1,
+    "phosphorus": 3.5,
+    "bicarbonate": 25.0,
+    "calcium": 9.4,
+    "uric_acid": 5.1,
+    "gender": "Female",
+    "ethnicity": "Non-Hispanic White",
+    "insulin_use": "No",
+    "diabetes_pills": "No",
+    "diabetes": "No",
+    "smoking_status": "Never"
+  }
+}
