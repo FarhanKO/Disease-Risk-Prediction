@@ -12,9 +12,6 @@ The model runs as a cascade:
 3. A confidence check sends uncertain cases to manual review.
 4. In the full pipeline, Grad-CAM shows which part of the trace drove the answer.
 
-These models are the image half of the heart module in
-[Disease-Risk-Prediction](https://github.com/FarhanKO/Disease-Risk-Prediction).
-
 > **Research and education only.** This is not a medical device. It was trained on
 > 491 ECGs from a single hospital and must not be used for diagnosis or treatment
 > decisions.
@@ -29,7 +26,7 @@ pip install -r requirements.txt     # keras 3, torch, numpy, pillow, huggingface
 from huggingface_hub import hf_hub_download
 import importlib.util
 
-REPO_ID = "<your-hf-username>/heart-ecg-classifier"
+REPO_ID = "<your-hf-username>/heart-disease-prediction"
 spec = importlib.util.spec_from_file_location("inference", hf_hub_download(REPO_ID, "inference.py"))
 inference = importlib.util.module_from_spec(spec); spec.loader.exec_module(inference)
 
@@ -43,7 +40,7 @@ The command line works too, either from a clone of this repo or with `--repo`:
 
 ```bash
 python inference.py ecg1.png ecg2.jpg
-python inference.py ecg.png --repo <your-hf-username>/heart-ecg-classifier --ensemble
+python inference.py ecg.png --repo <your-hf-username>/heart-disease-prediction --ensemble
 ```
 
 ```text
