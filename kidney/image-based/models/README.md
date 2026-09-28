@@ -9,7 +9,7 @@ Tumor**.
 > on 123 CT scans from hospitals in one city and must not be used for diagnosis
 > or treatment decisions.
 
-## Quick start (no GitHub code needed)
+## Quick start
 
 ```bash
 pip install -r requirements.txt     # keras 3, torch, scikit-learn, numpy, pillow, huggingface_hub
