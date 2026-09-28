@@ -108,19 +108,6 @@ probabilities for the 4 classes, in the order listed in `metadata.json`.
 
 ## Training data
 
-*ECG Images dataset of Cardiac Patients*, by Ali Haider Khan and Muzammil
-Hussain (Mendeley Data v2, 2021,
-[doi:10.17632/gwbz3fsgp8.2](https://data.mendeley.com/datasets/gwbz3fsgp8/2),
-CC BY 4.0). The ECGs were collected at the Ch. Pervaiz Elahi Institute of
-Cardiology, Multan, Pakistan.
-
-The published dataset has 928 files, but only 491 distinct ECGs. The
-Myocardial Infarction class has 239 files covering just 30 ECGs, and every
-Normal and History-of-MI ECG appears twice. Exact duplicates were removed by
-MD5 hash **before** splitting. Each printout was then cropped to the ECG grid,
-which removes the patient ID, date and heart-rate text a CNN could use as a
-shortcut. The data was split with stratification, seed 42:
-
 | Class | Unique ECGs | Train | Val | Test |
 |---|---|---|---|---|
 | Abnormal_Heartbeat | 233 | 163 | 35 | 35 |
