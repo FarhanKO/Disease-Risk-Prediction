@@ -1,45 +1,4 @@
----
-license: other
-library_name: keras
-pipeline_tag: image-classification
-tags:
-  - kidney
-  - ct
-  - computed-tomography
-  - medical-imaging
-  - kidney-stone
-  - kidney-tumor
-  - kidney-cyst
-  - transfer-learning
-  - densenet121
-  - keras
-  - pytorch
-metrics:
-  - accuracy
-  - f1
-  - roc_auc
-model-index:
-  - name: kidney-ct-densenet121
-    results:
-      - task:
-          type: image-classification
-          name: Kidney CT slice classification (4 classes)
-        dataset:
-          name: CT KIDNEY DATASET Normal-Cyst-Tumor and Stone (deduplicated, scan-level test split)
-          type: ct-kidney-dataset
-        metrics:
-          - type: accuracy
-            value: 0.894
-            name: Test accuracy
-          - type: f1
-            value: 0.867
-            name: Test macro-F1
-            args:
-              average: macro
-          - type: roc_auc
-            value: 0.976
-            name: Test macro ROC-AUC
----
+**See the models here: https://huggingface.co/FarhanKO/kidney-disease-prediction**
 
 # Kidney CT Classifier (DenseNet121)
 
