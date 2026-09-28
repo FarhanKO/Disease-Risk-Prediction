@@ -19,7 +19,7 @@ pip install -r requirements.txt     # keras 3, torch, scikit-learn, numpy, pillo
 from huggingface_hub import hf_hub_download
 import importlib.util
 
-REPO_ID = "FarhanKO/kidney-ct-classifier"
+REPO_ID = "FarhanKO/kidney-disease-prediction"
 spec = importlib.util.spec_from_file_location("inference", hf_hub_download(REPO_ID, "inference.py"))
 inference = importlib.util.module_from_spec(spec); spec.loader.exec_module(inference)
 
@@ -32,7 +32,7 @@ clf.predict("slice.png")
 Or from the command line (`--ensemble` soft-votes the four fine-tuned models):
 
 ```bash
-python inference.py slice1.png slice2.jpg --repo FarhanKO/kidney-ct-classifier
+python inference.py slice1.png slice2.jpg --repo FarhanKO/kidney-disease-prediction
 ```
 
 `status` is `accepted` (top-class probability ≥ 0.75), `review` (below 0.75:
@@ -58,10 +58,10 @@ pip install huggingface_hub
 from huggingface_hub import snapshot_download
 
 # Everything (~1 GB): all nine checkpoints + gate + metadata
-snapshot_download("FarhanKO/kidney-ct-classifier", local_dir="models")
+snapshot_download("FarhanKO/kidney-disease-prediction", local_dir="models")
 
 # Only what the deployed cascade needs (~90 MB)
-snapshot_download("FarhanKO/kidney-ct-classifier", local_dir="models",
+snapshot_download("FarhanKO/kidney-disease-prediction", local_dir="models",
                   allow_patterns=["DenseNet121_FT_best.keras", "kidney_ct_ood_detector.joblib", "metadata.json"])
 ```
 
