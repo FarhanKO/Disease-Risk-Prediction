@@ -49,7 +49,7 @@ image_based/
 
 **Checkpoints.** The seven `.keras` files (~700 MB total; the largest are over
 GitHub's 100 MB limit) are not in git. Download them from
-[Google Drive](https://drive.google.com/drive/folders/16-xnF2kkFHDjFObZEXpDXa0mAJp3zXtf)
+[Hugging Face](https://huggingface.co/FarhanKO/lung-disease-prediction)
 into `models/`:
 
 ```
