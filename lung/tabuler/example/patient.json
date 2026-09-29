@@ -1,0 +1,8 @@
+{
+  "age": 68, "gender": "Male", "ethnicity": "Non-Hispanic White", "education_level": 2,
+  "poverty_income_ratio": 1.1, "bmi": 21.5, "height_cm": 175, "smoking_status": "Current",
+  "cigarettes_per_day": 25, "smoking_years": 48, "household_smokers": 1, "serum_cotinine": 350,
+  "asthma_history": "Yes", "heart_failure": "No", "coronary_heart_disease": "Yes",
+  "sob_on_exertion": "Yes", "general_health": 4, "eosinophils": 0.4, "neutrophils": 6.5,
+  "lymphocytes": 1.4, "hemoglobin": 16.2
+}
