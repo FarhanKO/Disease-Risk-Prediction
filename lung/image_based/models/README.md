@@ -1,18 +1,9 @@
-**See the models: *https://huggingface.co/FarhanKO/lung-disease-prediction* **
+**See the models: https://huggingface.co/FarhanKO/lung-disease-prediction**
 
 # Chest X-ray Classifier (DenseNet121)
 
 Classifies a chest X-ray into one of six classes: **Covid-19, Emphysema,
 Normal, Pneumonia-Bacterial, Pneumonia-Viral, Tuberculosis**.
-
-The trained weights (~700 MB) are too large for GitHub, so they are hosted on
-the Hugging Face Hub:
-
-These models are the image half of the lung module in
-[Disease-Risk-Prediction](https://github.com/FarhanKO/Disease-Risk-Prediction)
-(`lung/image_based/`). In the repo, this folder holds only this README, the
-OOD gate (`lung_ood_detector.joblib`), `metadata.json`, `inference.py` and
-`requirements.txt`; the `.keras` files are git-ignored.
 
 > **Research and education only.** This is not a medical device and must not
 > be used for diagnosis or treatment decisions.
