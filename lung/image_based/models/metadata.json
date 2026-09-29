@@ -1,0 +1,44 @@
+{
+  "class_names": [
+    "Covid-19",
+    "Emphysema",
+    "Normal",
+    "Pneumonia-Bacterial",
+    "Pneumonia-Viral",
+    "Tuberculosis"
+  ],
+  "img_size": [
+    224,
+    224
+  ],
+  "preprocessing": "RGB, resize to 224x224, divide by 255",
+  "best_model": "DenseNet121_FT",
+  "ensemble_members": [
+    "ResNet50_FT",
+    "EfficientNetB0_FT",
+    "DenseNet121_FT"
+  ],
+  "confidence_threshold": 0.75,
+  "test_metrics": {
+    "accuracy": 0.8468624064478987,
+    "macro_f1": 0.8460430472443344,
+    "macro_roc_auc": 0.978633553724948,
+    "log_loss": 0.3843873777479991
+  },
+  "ensemble_test_metrics": {
+    "accuracy": 0.8635578583765112,
+    "macro_f1": 0.8628432087864336,
+    "macro_roc_auc": 0.980068653285405,
+    "log_loss": 0.6654048205194998
+  },
+  "confidence_coverage": {
+    "threshold": 0.75,
+    "coverage": 0.7248128957973518,
+    "accuracy_accepted": 0.9308975377283558,
+    "accuracy_flagged": 0.6255230125523012
+  },
+  "ood_gate": {
+    "test_xrays_rejected": 0.0005757052389176742,
+    "noise_images_rejected": 1.0
+  }
+}
