@@ -8,7 +8,7 @@ Normal, Pneumonia-Bacterial, Pneumonia-Viral, Tuberculosis**.
 > **Research and education only.** This is not a medical device and must not
 > be used for diagnosis or treatment decisions.
 
-## Quick start (no GitHub code needed)
+## Quick start
 
 ```bash
 pip install -r requirements.txt     # keras 3, torch, scikit-learn, numpy, pillow, huggingface_hub
