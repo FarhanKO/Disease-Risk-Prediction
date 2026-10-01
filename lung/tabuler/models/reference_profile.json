@@ -1,0 +1,26 @@
+{
+  "source": "training split (80 %) of data/COPD_NHANES.csv",
+  "values": {
+    "age": 60.0,
+    "gender": "Female",
+    "ethnicity": "Non-Hispanic White",
+    "education_level": 4.0,
+    "poverty_income_ratio": 2.19,
+    "bmi": 28.54,
+    "height_cm": 165.8,
+    "smoking_status": "Never",
+    "cigarettes_per_day": 0.0,
+    "smoking_years": 0.0,
+    "household_smokers": 0.0,
+    "serum_cotinine": 0.031,
+    "asthma_history": "No",
+    "heart_failure": "No",
+    "coronary_heart_disease": "No",
+    "sob_on_exertion": "No",
+    "general_health": 3.0,
+    "eosinophils": 0.2,
+    "neutrophils": 3.9,
+    "lymphocytes": 2.0,
+    "hemoglobin": 13.9
+  }
+}

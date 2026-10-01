@@ -1,0 +1,175 @@
+{
+  "dataset": "COPD_NHANES.csv (CDC NHANES 2007-March 2020, examined adults aged 40+)",
+  "target": "copd_present: doctor-diagnosed COPD, emphysema or chronic bronchitis",
+  "best_model": "Logistic Regression",
+  "selection_rule": "one-standard-error rule on 5-fold CV PR-AUC over the 17 models of notebook/Lung_Disease.ipynb",
+  "optimal_threshold": 0.1637151497804107,
+  "cost_weights": {
+    "false_negative": 5,
+    "false_positive": 1
+  },
+  "risk_bands": {
+    "low": "< 0.1637",
+    "medium": "0.1637 - 0.50",
+    "high": ">= 0.50"
+  },
+  "raw_input_columns": [
+    "age",
+    "gender",
+    "ethnicity",
+    "education_level",
+    "poverty_income_ratio",
+    "bmi",
+    "height_cm",
+    "smoking_status",
+    "cigarettes_per_day",
+    "smoking_years",
+    "household_smokers",
+    "serum_cotinine",
+    "asthma_history",
+    "heart_failure",
+    "coronary_heart_disease",
+    "sob_on_exertion",
+    "general_health",
+    "eosinophils",
+    "neutrophils",
+    "lymphocytes",
+    "hemoglobin"
+  ],
+  "numerical_features": [
+    "age",
+    "education_level",
+    "poverty_income_ratio",
+    "bmi",
+    "height_cm",
+    "cigarettes_per_day",
+    "smoking_years",
+    "household_smokers",
+    "general_health",
+    "eosinophils",
+    "neutrophils",
+    "lymphocytes",
+    "hemoglobin",
+    "pack_years",
+    "log_cotinine",
+    "nlr",
+    "comorbidity_count"
+  ],
+  "categorical_features": [
+    "gender",
+    "ethnicity",
+    "smoking_status",
+    "asthma_history",
+    "heart_failure",
+    "coronary_heart_disease",
+    "sob_on_exertion"
+  ],
+  "test_metrics": {
+    "roc_auc": 0.8639547055038241,
+    "pr_auc": 0.48036078387781794,
+    "brier_score": 0.06663939891371717,
+    "recall_at_threshold": 0.6893004115226338,
+    "precision_at_threshold": 0.34643226473629785,
+    "specificity_at_threshold": 0.8569812174700159
+  },
+  "bootstrap_confidence_intervals": {
+    "Recall": {
+      "mean": 0.6895378126788598,
+      "ci_lower": 0.6505971150225903,
+      "ci_upper": 0.733615221987315
+    },
+    "Precision": {
+      "mean": 0.3464724135800941,
+      "ci_lower": 0.3185557464681176,
+      "ci_upper": 0.37627865005165617
+    },
+    "ROC-AUC": {
+      "mean": 0.8639230459518185,
+      "ci_lower": 0.8471980528758292,
+      "ci_upper": 0.8803368383880421
+    },
+    "PR-AUC": {
+      "mean": 0.4817108689170972,
+      "ci_lower": 0.43440830682526765,
+      "ci_upper": 0.5267615075681207
+    }
+  },
+  "training_rows": 19617,
+  "test_rows": 4905,
+  "prevalence": 0.09909469048201615,
+  "anomaly_gate_rejection_rate": {
+    "overall": 0.011824668705402651,
+    "copd": 0.06172839506172839,
+    "no_copd": 0.006336275175379045
+  },
+  "cv_pr_auc": {
+    "TabPFN": {
+      "mean": 0.4659758161451117,
+      "se": 0.013353373417203
+    },
+    "Stacking Ensemble": {
+      "mean": 0.4632986066185145,
+      "se": 0.012141051808836
+    },
+    "Logistic Regression": {
+      "mean": 0.460793105786658,
+      "se": 0.0116065895715976
+    },
+    "Explainable Boosting": {
+      "mean": 0.4601169332906904,
+      "se": 0.0109894763375729
+    },
+    "TabM": {
+      "mean": 0.4574985638411498,
+      "se": 0.0150054950737652
+    },
+    "CatBoost": {
+      "mean": 0.4574431827467259,
+      "se": 0.0128134272901969
+    },
+    "XGBoost": {
+      "mean": 0.4564827455847898,
+      "se": 0.0113395102940257
+    },
+    "Neural Network (MLP)": {
+      "mean": 0.4530512010528962,
+      "se": 0.0140833916658789
+    },
+    "RealMLP": {
+      "mean": 0.4515513873794746,
+      "se": 0.0118169142317944
+    },
+    "LightGBM": {
+      "mean": 0.4513121560209606,
+      "se": 0.0106122781740122
+    },
+    "FT-Transformer": {
+      "mean": 0.4501414701666797,
+      "se": 0.0150663971737126
+    },
+    "Random Forest": {
+      "mean": 0.4501208040205097,
+      "se": 0.0100296133541881
+    },
+    "KNN": {
+      "mean": 0.416686709870245,
+      "se": 0.0128473829330481
+    },
+    "TabNet": {
+      "mean": 0.4092481247757186,
+      "se": 0.0138023010678977
+    },
+    "Decision Tree": {
+      "mean": 0.3865353987016592,
+      "se": 0.0103390586220931
+    },
+    "SVM": {
+      "mean": 0.3862211170781616,
+      "se": 0.0108223791608697
+    },
+    "Naive Bayes": {
+      "mean": 0.3840551364949253,
+      "se": 0.0076404821269319
+    }
+  }
+}
