@@ -1,0 +1,59 @@
+"""
+predict.py — Cascade inference for the lung disease (COPD) tabular model, behind the
+interface all six modules share (common.tabular.TabularModel). This is the module
+Streamlit and the top-level cascade import.
+
+Every patient passes through the cascade — there is no non-cascade path:
+
+    Stage 1 (Anomaly Gate):   an Isolation Forest (1 % contamination, fitted on the
+                              training set) flags implausible or extreme profiles, such
+                              as data-entry errors or rare compounding conditions.
+                              Flagged patients are withheld from Stage 2 and routed to
+                              manual clinical review.
+    Stage 2 (Classification): survivors are scored by the calibrated model. The
+                              cost-optimal threshold from models/metadata.json decides
+                              "refer for spirometry", and the risk bands are anchored to
+                              it: Low (< threshold), Medium (threshold to 0.50), High (>= 0.50).
+    Explanation:              the inputs that moved this patient's probability most.
+
+Feature engineering and preprocessing happen inside the saved pipelines, so callers
+supply only the 21 raw columns in src.data.RAW_INPUT_COLUMNS (see data/README.md).
+
+    from src.predict import predict
+    result = predict(patient)      # common.Prediction: status, label, probability, positive, explanation
+
+CLI (from lung/tabular/):
+    python -m src.predict --input examples/patient.json
+"""
+
+import pandas as pd
+
+from common import Prediction
+from common.tabular import TabularModel, run_cli
+
+from . import data
+
+MODEL_DIR = data.MODULE_DIR / "models"
+DEFAULT_MODEL_PATH = MODEL_DIR / "lung_copd_calibrated_model.joblib"
+DEFAULT_ANOMALY_MODEL_PATH = MODEL_DIR / "lung_copd_anomaly_gate.joblib"
+DEFAULT_METADATA_PATH = MODEL_DIR / "metadata.json"
+
+MODEL = TabularModel(
+    organ="lung", disease="COPD (emphysema or chronic bronchitis)", data_module=data,
+    model_path=DEFAULT_MODEL_PATH, gate_path=DEFAULT_ANOMALY_MODEL_PATH, metadata_path=DEFAULT_METADATA_PATH,
+    referral="refer for spirometry",
+)
+
+
+def predict(patient: dict, explain: bool = True) -> Prediction:
+    """Run the cascade for one patient: a dict of the raw input columns (NaN / None allowed)."""
+    return MODEL.predict(patient, explain=explain)
+
+
+def predict_batch(patients: pd.DataFrame) -> pd.DataFrame:
+    """The cascade for many patients: status, label, probability, positive and message per row."""
+    return MODEL.predict_batch(patients)
+
+
+if __name__ == "__main__":
+    run_cli(MODEL, "Run lung disease (COPD) risk prediction (cascade).")
