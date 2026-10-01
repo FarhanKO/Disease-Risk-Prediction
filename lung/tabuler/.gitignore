@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Streamlit cache
+.streamlit/
+
+# Raw NHANES .xpt downloads — rebuilt by data/build_copd_nhanes.py
+data/raw/
+
+# Scratch files written by CatBoost / pytabkit during training
+catboost_info/
+rtdl_checkpoints/
+notebook/catboost_info/
+notebook/rtdl_checkpoints/
+
+# Logs
+*.log
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+
+# Resumable tuning cache written by the notebook
+notebook/grid_cache/
+notebook/rtdl_checkpoints/
