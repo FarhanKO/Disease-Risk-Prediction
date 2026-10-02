@@ -1,0 +1,560 @@
+{
+  "dataset": "TRIAGE_NHAMCS.csv (CDC NHAMCS emergency-department visits 2010-2022, adults 18+ with a symptom and a diagnosis)",
+  "task": "layer 1 router: which organ modules (heart, lung, kidney) should see a patient, from symptoms",
+  "targets": {
+    "heart": "ischemic heart disease, arrhythmia, heart failure, other heart disease (first three ED diagnoses)",
+    "lung": "influenza, pneumonia, lower respiratory infection, COPD, asthma, other lung disease, lung cancer, TB, COVID-19",
+    "kidney": "kidney failure / CKD, kidney infection, stones and renal colic, other kidney disorders, kidney cancer, dialysis"
+  },
+  "selection_rule": "one-standard-error rule on 5-fold CV PR-AUC, per head",
+  "routing_rule": "route to every organ with probability >= its threshold; first route = highest probability / threshold; none = other",
+  "vital_dropout": 0.5,
+  "cost_weights": {
+    "false_negative": 5,
+    "false_positive": 1
+  },
+  "heads": {
+    "heart": {
+      "best_model": "CatBoost",
+      "optimal_threshold": 0.15091517372886196,
+      "cv_pr_auc": {
+        "Logistic Regression": {
+          "mean": 0.31066317692273043,
+          "se": 0.0026592056958837504
+        },
+        "Naive Bayes": {
+          "mean": 0.18948011367338938,
+          "se": 0.0031020018802242802
+        },
+        "Decision Tree": {
+          "mean": 0.2737282715821611,
+          "se": 0.0015951086446816096
+        },
+        "Random Forest": {
+          "mean": 0.3149924231465174,
+          "se": 0.003909052414858047
+        },
+        "XGBoost": {
+          "mean": 0.3444644135050157,
+          "se": 0.0019924908977336266
+        },
+        "LightGBM": {
+          "mean": 0.340633964870213,
+          "se": 0.0020989213266020107
+        },
+        "Neural Network (MLP)": {
+          "mean": 0.3252995286696807,
+          "se": 0.0022690120913493347
+        },
+        "CatBoost": {
+          "mean": 0.3495456810724547,
+          "se": 0.0035320554128834094
+        },
+        "Explainable Boosting": {
+          "mean": 0.3422684838493013,
+          "se": 0.0031059232531088577
+        }
+      },
+      "within_one_se": [
+        "CatBoost"
+      ],
+      "prevalence": 0.04321639612411918,
+      "test_metrics": {
+        "roc_auc": 0.8962067814597348,
+        "pr_auc": 0.3516124770027544,
+        "brier_score": 0.03339546838987895,
+        "recall_at_threshold": 0.5526315789473685,
+        "precision_at_threshold": 0.2990844354018311,
+        "specificity_at_threshold": 0.9414944806113784
+      },
+      "test_metrics_no_vital_signs": {
+        "roc_auc": 0.889011855282134,
+        "pr_auc": 0.31414117580993006,
+        "brier_score": 0.03423474525982871,
+        "recall_at_threshold": 0.5401002506265664,
+        "precision_at_threshold": 0.29004037685060563,
+        "specificity_at_threshold": 0.9402773846589301
+      },
+      "bootstrap_confidence_intervals": {
+        "with vital signs": {
+          "Recall": {
+            "mean": 0.5523930608668324,
+            "ci_lower": 0.52891407736208,
+            "ci_upper": 0.5770478152297108
+          },
+          "Precision": {
+            "mean": 0.299188999856733,
+            "ci_lower": 0.2834241038068926,
+            "ci_upper": 0.31557733304452906
+          },
+          "ROC-AUC": {
+            "mean": 0.8961348793154688,
+            "ci_lower": 0.8888340126929609,
+            "ci_upper": 0.9030145972032148
+          },
+          "PR-AUC": {
+            "mean": 0.3522710964161756,
+            "ci_lower": 0.32961732772355995,
+            "ci_upper": 0.37653163045183846
+          }
+        },
+        "without vital signs": {
+          "Recall": {
+            "mean": 0.5399823778745843,
+            "ci_lower": 0.516245508641601,
+            "ci_upper": 0.5634619293308317
+          },
+          "Precision": {
+            "mean": 0.29015609085188604,
+            "ci_lower": 0.27524391572582296,
+            "ci_upper": 0.3049665332347097
+          },
+          "ROC-AUC": {
+            "mean": 0.8889260937441372,
+            "ci_lower": 0.8811552799885515,
+            "ci_upper": 0.896264307903069
+          },
+          "PR-AUC": {
+            "mean": 0.31501975213445804,
+            "ci_lower": 0.29213205868742737,
+            "ci_upper": 0.33748840718734685
+          }
+        }
+      }
+    },
+    "lung": {
+      "best_model": "Explainable Boosting",
+      "optimal_threshold": 0.16168954534595606,
+      "cv_pr_auc": {
+        "Logistic Regression": {
+          "mean": 0.539599134383956,
+          "se": 0.0066211811242507775
+        },
+        "Naive Bayes": {
+          "mean": 0.3996968535693449,
+          "se": 0.00492312452187526
+        },
+        "Decision Tree": {
+          "mean": 0.5267490730440164,
+          "se": 0.004664919403752548
+        },
+        "Random Forest": {
+          "mean": 0.5436876570921608,
+          "se": 0.00499251425739627
+        },
+        "XGBoost": {
+          "mean": 0.5606306266172957,
+          "se": 0.004235266834098664
+        },
+        "LightGBM": {
+          "mean": 0.5641262627557163,
+          "se": 0.0049539786337421
+        },
+        "Neural Network (MLP)": {
+          "mean": 0.5530108956929816,
+          "se": 0.0046551182045741265
+        },
+        "CatBoost": {
+          "mean": 0.5631037237759302,
+          "se": 0.0044235079507077
+        },
+        "Explainable Boosting": {
+          "mean": 0.5602092642525083,
+          "se": 0.005038428638410552
+        }
+      },
+      "within_one_se": [
+        "Explainable Boosting",
+        "LightGBM",
+        "XGBoost",
+        "CatBoost"
+      ],
+      "prevalence": 0.09183822693076385,
+      "test_metrics": {
+        "roc_auc": 0.8898099790282357,
+        "pr_auc": 0.5880417519747569,
+        "brier_score": 0.053164350963135425,
+        "recall_at_threshold": 0.7313476850486582,
+        "precision_at_threshold": 0.47040971168437024,
+        "specificity_at_threshold": 0.9167437006113016
+      },
+      "test_metrics_no_vital_signs": {
+        "roc_auc": 0.8825747049577424,
+        "pr_auc": 0.5494139938377949,
+        "brier_score": 0.055195329638272415,
+        "recall_at_threshold": 0.7151282807431436,
+        "precision_at_threshold": 0.46058879392212726,
+        "specificity_at_threshold": 0.915312360220665
+      },
+      "bootstrap_confidence_intervals": {
+        "with vital signs": {
+          "Recall": {
+            "mean": 0.7316473118053717,
+            "ci_lower": 0.7174100941970608,
+            "ci_upper": 0.7459286241583375
+          },
+          "Precision": {
+            "mean": 0.47065509895348906,
+            "ci_lower": 0.45712176067073174,
+            "ci_upper": 0.4844074620926342
+          },
+          "ROC-AUC": {
+            "mean": 0.889964387670751,
+            "ci_lower": 0.883170349569134,
+            "ci_upper": 0.8963711512900806
+          },
+          "PR-AUC": {
+            "mean": 0.5884860078516024,
+            "ci_lower": 0.5704918276231229,
+            "ci_upper": 0.60609815902161
+          }
+        },
+        "without vital signs": {
+          "Recall": {
+            "mean": 0.7153875867597514,
+            "ci_lower": 0.7001772927195221,
+            "ci_upper": 0.7297072918695013
+          },
+          "Precision": {
+            "mean": 0.46093607526946095,
+            "ci_lower": 0.4479591518542134,
+            "ci_upper": 0.47406342621704534
+          },
+          "ROC-AUC": {
+            "mean": 0.882682190917142,
+            "ci_lower": 0.8755018691537182,
+            "ci_upper": 0.8890525794379537
+          },
+          "PR-AUC": {
+            "mean": 0.5500460677283676,
+            "ci_lower": 0.5309376973953629,
+            "ci_upper": 0.5680705114710102
+          }
+        }
+      }
+    },
+    "kidney": {
+      "best_model": "LightGBM",
+      "optimal_threshold": 0.15444831333243944,
+      "cv_pr_auc": {
+        "Logistic Regression": {
+          "mean": 0.23266879384164646,
+          "se": 0.005960567568519637
+        },
+        "Naive Bayes": {
+          "mean": 0.15828315135921117,
+          "se": 0.0032948055814634434
+        },
+        "Decision Tree": {
+          "mean": 0.22188580059699695,
+          "se": 0.004273965609705994
+        },
+        "Random Forest": {
+          "mean": 0.23507404967783527,
+          "se": 0.006714914523192392
+        },
+        "XGBoost": {
+          "mean": 0.27652527823517087,
+          "se": 0.006758395628037209
+        },
+        "LightGBM": {
+          "mean": 0.27476139271112954,
+          "se": 0.005575711357667663
+        },
+        "Neural Network (MLP)": {
+          "mean": 0.2609726964495659,
+          "se": 0.007041501732111196
+        },
+        "CatBoost": {
+          "mean": 0.27363602864661746,
+          "se": 0.005848151553631975
+        },
+        "Explainable Boosting": {
+          "mean": 0.2682910417658002,
+          "se": 0.00533084014750129
+        }
+      },
+      "within_one_se": [
+        "LightGBM",
+        "XGBoost",
+        "CatBoost"
+      ],
+      "prevalence": 0.03853132498144928,
+      "test_metrics": {
+        "roc_auc": 0.8563958319795171,
+        "pr_auc": 0.2964958759256052,
+        "brier_score": 0.03149945725550288,
+        "recall_at_threshold": 0.320449754040759,
+        "precision_at_threshold": 0.33603537214443624,
+        "specificity_at_threshold": 0.9746218629411599
+      },
+      "test_metrics_no_vital_signs": {
+        "roc_auc": 0.8433204173911131,
+        "pr_auc": 0.2775737594601899,
+        "brier_score": 0.03191557411766591,
+        "recall_at_threshold": 0.29304286718200984,
+        "precision_at_threshold": 0.36041486603284356,
+        "specificity_at_threshold": 0.9791566909838605
+      },
+      "bootstrap_confidence_intervals": {
+        "with vital signs": {
+          "Recall": {
+            "mean": 0.3201824313259411,
+            "ci_lower": 0.29663056564345086,
+            "ci_upper": 0.3453552425250825
+          },
+          "Precision": {
+            "mean": 0.3359159074745169,
+            "ci_lower": 0.31180160070684876,
+            "ci_upper": 0.360689717088985
+          },
+          "ROC-AUC": {
+            "mean": 0.8564265207010678,
+            "ci_lower": 0.8474950690553951,
+            "ci_upper": 0.8656836234948031
+          },
+          "PR-AUC": {
+            "mean": 0.29661993923109276,
+            "ci_lower": 0.2716751941790136,
+            "ci_upper": 0.3215264594917153
+          }
+        },
+        "without vital signs": {
+          "Recall": {
+            "mean": 0.29279547934935324,
+            "ci_lower": 0.2700728258696293,
+            "ci_upper": 0.3162056244102113
+          },
+          "Precision": {
+            "mean": 0.3601098823517604,
+            "ci_lower": 0.33302437400330565,
+            "ci_upper": 0.3864240227477221
+          },
+          "ROC-AUC": {
+            "mean": 0.843204171694579,
+            "ci_lower": 0.8342338049484959,
+            "ci_upper": 0.853322685764109
+          },
+          "PR-AUC": {
+            "mean": 0.27737266447172626,
+            "ci_lower": 0.25361694222614073,
+            "ci_upper": 0.3021544128135737
+          }
+        }
+      }
+    }
+  },
+  "routing_test_metrics": {
+    "with vital signs": {
+      "Heart recall": 0.5526315789473685,
+      "Lung recall": 0.7313476850486582,
+      "Kidney recall": 0.320449754040759,
+      "Heart precision": 0.2990844354018311,
+      "Lung precision": 0.47040971168437024,
+      "Kidney precision": 0.33603537214443624,
+      "All diagnosed organs routed": 0.5847386875939222,
+      "At least one diagnosed organ routed": 0.6171314075805644,
+      "Other visits left alone": 0.8681190807124155,
+      "Visits routed to any organ": 0.2203325570059037,
+      "Organ models run per visit": 0.25938363212912313
+    },
+    "without vital signs": {
+      "Heart recall": 0.5401002506265664,
+      "Lung recall": 0.7151282807431436,
+      "Kidney recall": 0.29304286718200984,
+      "Heart precision": 0.29004037685060563,
+      "Lung precision": 0.46058879392212726,
+      "Kidney precision": 0.36041486603284356,
+      "All diagnosed organs routed": 0.5687093003840374,
+      "At least one diagnosed organ routed": 0.5989313741860077,
+      "Other visits left alone": 0.8707696286000581,
+      "Visits routed to any organ": 0.21461842604127174,
+      "Organ models run per visit": 0.2544006932784488
+    }
+  },
+  "raw_input_columns": [
+    "age",
+    "sex",
+    "symptom_1",
+    "symptom_2",
+    "symptom_3",
+    "injury_reason",
+    "diabetes",
+    "temperature_f",
+    "heart_rate",
+    "respiratory_rate",
+    "systolic_bp",
+    "diastolic_bp",
+    "oxygen_saturation",
+    "pain_score"
+  ],
+  "numerical_features": [
+    "age",
+    "temperature_f",
+    "heart_rate",
+    "respiratory_rate",
+    "systolic_bp",
+    "diastolic_bp",
+    "oxygen_saturation",
+    "pain_score",
+    "symptom_count",
+    "pulse_pressure",
+    "shock_index",
+    "fever",
+    "low_oxygen",
+    "fast_heart_rate",
+    "fast_breathing"
+  ],
+  "categorical_features": [
+    "sex",
+    "injury_reason",
+    "diabetes",
+    "symptom_1",
+    "symptom_2",
+    "symptom_3"
+  ],
+  "gate_features": [
+    "age",
+    "temperature_f",
+    "heart_rate",
+    "respiratory_rate",
+    "systolic_bp",
+    "diastolic_bp",
+    "oxygen_saturation",
+    "pain_score",
+    "pulse_pressure",
+    "shock_index"
+  ],
+  "symptoms": [
+    "Chest pain",
+    "Fever",
+    "Flank (side) or kidney pain",
+    "General weakness",
+    "Pain, site not specified",
+    "Fainting",
+    "Chest pressure or tightness",
+    "Swelling (edema)",
+    "Chills",
+    "Tiredness or exhaustion",
+    "Facial pain",
+    "Rib pain",
+    "Unsteady walking or poor coordination",
+    "Pain at another specific site",
+    "Feeling generally unwell",
+    "Fluid retention or imbalance",
+    "Groin pain",
+    "Allergic reaction",
+    "Bleeding, site not specified",
+    "Excessive sweating",
+    "Cramps or spasms",
+    "Face symptoms",
+    "Weight gain",
+    "Other general symptom",
+    "Anxiety or nervousness",
+    "Depression",
+    "Alcohol-related problem",
+    "Delusions or hallucinations",
+    "Drug use problem",
+    "Behavior changes",
+    "Hostile or aggressive behavior",
+    "Trouble sleeping",
+    "Excessive sleepiness",
+    "Other psychological symptom",
+    "Headache",
+    "Dizziness or vertigo",
+    "Numbness",
+    "Seizure (convulsions)",
+    "Tingling (pins and needles)",
+    "Tremor or involuntary movements",
+    "Speech difficulty",
+    "Weakness of a limb or one side",
+    "Other nervous system symptom",
+    "Palpitations",
+    "Irregular heartbeat",
+    "Fast heartbeat",
+    "Other circulation and lymph symptom",
+    "Earache",
+    "Eye pain",
+    "Vision problems",
+    "Red or discolored eyes",
+    "Eye swelling",
+    "Eye discharge",
+    "Hearing loss",
+    "Other eye and ear symptom",
+    "Shortness of breath",
+    "Cough",
+    "Sore throat",
+    "Nasal congestion",
+    "Wheezing",
+    "Head cold",
+    "Nosebleed",
+    "Flu symptoms",
+    "Coughing up phlegm",
+    "Sinus pain or congestion",
+    "Chest congestion",
+    "Coughing up blood",
+    "Throat swelling",
+    "Other respiratory symptom",
+    "Abdominal pain",
+    "Nausea",
+    "Vomiting",
+    "Diarrhea",
+    "Lower abdominal pain",
+    "Toothache or gum problem",
+    "Upper abdominal pain",
+    "Blood in stool or rectal bleeding",
+    "Constipation",
+    "Difficulty swallowing",
+    "Loss of appetite",
+    "Mouth pain or sores",
+    "Abdominal swelling or bloating",
+    "Vomiting blood",
+    "Rectal pain",
+    "Heartburn or indigestion",
+    "Lip symptoms",
+    "Change in stools",
+    "Other digestive symptom",
+    "Pregnancy-related problem",
+    "Painful urination",
+    "Vaginal bleeding",
+    "Difficulty urinating",
+    "Blood in urine",
+    "Frequent or urgent urination",
+    "Pelvic pain",
+    "Suspected urinary infection",
+    "Vaginal pain or itching",
+    "Vaginal discharge",
+    "Testicle or scrotum pain or swelling",
+    "Penile pain or discharge",
+    "Breast pain",
+    "Unusual urine color or smell",
+    "Other urinary and genital symptom",
+    "Skin rash",
+    "Skin redness or discoloration",
+    "Itchy or irritated skin",
+    "Skin infection",
+    "Skin lesion or growth",
+    "Skin swelling",
+    "Other skin, nail and hair symptom",
+    "Back pain",
+    "Leg pain",
+    "Low back pain",
+    "Neck pain",
+    "Shoulder pain",
+    "Arm pain or swelling",
+    "Knee pain or swelling",
+    "Foot or toe pain or swelling",
+    "Hand or finger pain or swelling",
+    "Hip pain",
+    "Ankle pain or swelling",
+    "Leg swelling",
+    "Wrist pain or swelling",
+    "Elbow pain or swelling",
+    "Muscle aches or cramps",
+    "Leg weakness",
+    "Joint pain",
+    "Other muscle and joint symptom"
+  ],
+  "training_rows": 147703,
+  "test_rows": 36926
+}
