@@ -1,0 +1,19 @@
+{
+  "source": "training split (80 %) of data/TRIAGE_NHAMCS.csv, as recorded; symptoms: none",
+  "values": {
+    "age": 45.0,
+    "temperature_f": 98.1,
+    "heart_rate": 85.0,
+    "respiratory_rate": 18.0,
+    "systolic_bp": 134.0,
+    "diastolic_bp": 79.0,
+    "oxygen_saturation": 98.0,
+    "pain_score": 6.0,
+    "sex": "Female",
+    "injury_reason": "No",
+    "diabetes": "No",
+    "symptom_1": null,
+    "symptom_2": null,
+    "symptom_3": null
+  }
+}
