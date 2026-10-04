@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Streamlit cache
+.streamlit/
+
+# Raw NHAMCS downloads (Stata / SPSS archives) — rebuilt by data/build_triage_nhamcs.py
+data/raw/
+
+# Grid-search cache written by the notebook so a stopped run can resume
+notebooks/cv_cache/
+
+# Scratch files written by CatBoost during training
+catboost_info/
+notebooks/catboost_info/
+
+# Logs
+*.log
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
