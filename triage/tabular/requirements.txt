@@ -1,0 +1,15 @@
+pandas
+numpy
+scikit-learn>=1.8
+xgboost
+lightgbm
+catboost
+interpret-core
+shap
+pyod
+torch
+matplotlib
+seaborn
+joblib
+psutil
+pyreadstat
