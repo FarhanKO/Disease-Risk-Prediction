@@ -1,0 +1,2 @@
+# The front end; the models also need each module's own requirements.txt
+streamlit>=1.50
