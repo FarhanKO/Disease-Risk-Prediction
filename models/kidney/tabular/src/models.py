@@ -1,6 +1,6 @@
 """
 models.py — The 17 candidate classifiers and their grids, matching
-notebook/Kidney Disease.ipynb.
+notebooks/Kidney Disease.ipynb.
 
     CPU (default)  : 9 baselines + CatBoost + Explainable Boosting Machine
     Deep (opt-in)  : TabNet, FT-Transformer, RealMLP, TabM, TabPFN — need

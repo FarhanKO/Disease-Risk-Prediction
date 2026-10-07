@@ -28,6 +28,7 @@ env/
 data/*
 !data/build_ecg_dataset.py
 !data/manifest.csv
+!data/README.md
 
 # Logs
 *.log

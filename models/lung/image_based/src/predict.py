@@ -23,7 +23,7 @@ backend when torch is installed, with the same test metrics.
     from src.predict import predict
     result = predict("xray.jpg")   # common.Prediction: status, label, probability, positive, explanation
 
-CLI (from lung/image_based/):
+CLI (from models/lung/image_based/):
     python -m src.predict --image xray1.jpg xray2.png --heatmap-dir out/
 """
 

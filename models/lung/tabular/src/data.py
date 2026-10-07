@@ -2,7 +2,7 @@
 data.py — Data loading, feature engineering, and preprocessing for the lung disease
 (COPD) tabular module (COPD_NHANES.csv, see data/README.md).
 
-Everything here mirrors notebook/Lung_Disease.ipynb, so models trained by src/train.py
+Everything here mirrors notebooks/Lung_Disease.ipynb, so models trained by src/train.py
 and by the notebook are interchangeable.
 """
 

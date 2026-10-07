@@ -8,7 +8,7 @@ out-of-fold TRAINING predictions); it is never re-tuned on the test set here.
 Test metrics and intervals are written back into metadata.json, and permutation
 importance to results/permutational_feature_importance.csv. SHAP plots are in the notebook.
 
-CLI (from lung/tabular/):
+CLI (from models/lung/tabular/):
     python -m src.evaluate
 """
 
@@ -24,7 +24,7 @@ from sklearn.metrics import (accuracy_score, average_precision_score, brier_scor
                              f1_score, precision_score, recall_score, roc_auc_score)
 from sklearn.utils import resample
 
-from common.artifacts import load_pipeline
+from common.utils.artifacts import load_pipeline
 
 from . import data
 from .data import DEFAULT_DATA_PATH, MODULE_DIR, RANDOM_STATE, get_X_y, keep_workers_light, load_raw_data, split_data

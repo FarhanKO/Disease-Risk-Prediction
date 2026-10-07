@@ -1,6 +1,6 @@
 """
 train.py — Trains the kidney (CKD) cascade artifacts, mirroring
-notebook/Kidney Disease.ipynb:
+notebooks/Kidney Disease.ipynb:
 
     Stage 1 (Anomaly Gate):   models/kidney_anomaly_gate.joblib
     Stage 2 (Classification): models/kidney_disease_calibrated_model.joblib
@@ -11,7 +11,7 @@ Default: re-train the model the notebook selected (src.models.SELECTED_MODEL)
 with its grid. With --compare, re-run the whole comparison and pick the model
 with the one-standard-error rule on 5-fold CV PR-AUC.
 
-CLI (run from kidney/tabular/):
+CLI (run from models/kidney/tabular/):
     python -m src.train
     python -m src.train --compare                          # 11 CPU models + stacking
     python -m src.train --compare --include-deep           # + TabNet, FT-Transformer, RealMLP, TabM, TabPFN (GPU)

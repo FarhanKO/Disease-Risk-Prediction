@@ -74,7 +74,7 @@ tabular/
 ├── data/
 │   ├── CKD_NHANES.csv          # raw NHANES 2021–2023 export (public domain)
 │   └── README.md               # label bug, KDIGO correction, input columns
-├── notebook/
+├── notebooks/
 │   └── Kidney Disease.ipynb    # full analysis: audit, 17 models, calibration, SHAP, clustering, anomalies, cascade
 ├── src/
 │   ├── data.py       # KDIGO label, NHANES cleaning, feature engineering, preprocessing pipeline
@@ -91,7 +91,7 @@ tabular/
 
 ## Usage
 
-Run from this folder (`kidney/tabular/`):
+Run from this folder (`models/kidney/tabular/`):
 
 ```bash
 pip install -r requirements.txt

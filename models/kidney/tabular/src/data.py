@@ -2,7 +2,7 @@
 data.py — Loading, target correction, cleaning, feature engineering, and the
 preprocessing pipeline for the kidney disease (CKD) tabular module.
 
-Mirrors notebook/Kidney Disease.ipynb:
+Mirrors notebooks/Kidney Disease.ipynb:
 
 1. Target: KDIGO CKD (eGFR < 60 mL/min/1.73m2 or urine albumin-to-creatinine
    ratio >= 30 mg/g), adults 20+ whose status is determinable. The raw

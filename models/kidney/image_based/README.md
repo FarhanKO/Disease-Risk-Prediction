@@ -2,7 +2,7 @@
 
 Classifies a kidney CT slice into four categories: **Cyst, Normal, Stone,
 Tumor**. Part of the `disease-risk-prediction` monorepo (heart / kidney / lung,
-each with tabular + image submodules). Structured like `lung/image_based`.
+each with tabular + image submodules). Structured like `models/lung/image_based`.
 
 ## What it does
 
@@ -36,7 +36,7 @@ each with tabular + image submodules). Structured like `lung/image_based`.
 ```
 image_based/
 ├── requirements.txt
-├── notebook/Kidney_CT.ipynb        # the full pipeline: leakage audit, EDA, training, evaluation, Grad-CAM, cascade
+├── notebooks/Kidney_CT.ipynb        # the full pipeline: leakage audit, EDA, training, evaluation, Grad-CAM, cascade
 ├── src/                            # the notebook's inference code, importable
 │   ├── data.py                     # class list, load_image() (grayscale + pad + resize), split loader
 │   ├── predict.py                  # the shared predict() / predict_batch() interface (common/image.py)
@@ -81,7 +81,7 @@ loaded, not retrained. Start Jupyter with `RETRAIN=1` to retrain everything.
 ## Usage
 
 The notebook trains the models; `src/` serves them. From this folder
-(`kidney/image_based/`):
+(`models/kidney/image_based/`):
 
 ```bash
 python -m src.predict --image slice1.png slice2.jpg --heatmap-dir out/   # prints the cascade result, saves Grad-CAM overlays

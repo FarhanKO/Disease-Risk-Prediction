@@ -3,7 +3,7 @@
 **491 unique 12-lead ECG printouts in 4 classes**, taken from the 928 files in the
 published dataset. The rest were exact duplicates and were removed. Each image
 is cropped to the ECG grid and saved as a 1054 × 617 PNG in a stratified
-70 / 15 / 15 train / val / test split. Used by `notebook/Heart_ECG.ipynb` and
+70 / 15 / 15 train / val / test split. Used by `notebooks/Heart_ECG.ipynb` and
 `src/`.
 
 | Class | Raw files | Duplicates dropped | Unique ECGs | Train | Val | Test |
@@ -36,7 +36,7 @@ Licensed **CC BY 4.0**: you may share and adapt the data if you credit the autho
 ## Rebuild
 
 The images are not in git (about 465 MB processed, 587 MB raw). Download the
-zip from the Mendeley page, then run from `heart/image_based/`:
+zip from the Mendeley page, then run from `models/heart/image_based/`:
 
 ```bash
 python data/build_ecg_dataset.py --source path/to/ECG.zip

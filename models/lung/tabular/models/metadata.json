@@ -2,7 +2,7 @@
   "dataset": "COPD_NHANES.csv (CDC NHANES 2007-March 2020, examined adults aged 40+)",
   "target": "copd_present: doctor-diagnosed COPD, emphysema or chronic bronchitis",
   "best_model": "Logistic Regression",
-  "selection_rule": "one-standard-error rule on 5-fold CV PR-AUC over the 17 models of notebook/Lung_Disease.ipynb",
+  "selection_rule": "one-standard-error rule on 5-fold CV PR-AUC over the 17 models of notebooks/Lung_Disease.ipynb",
   "optimal_threshold": 0.1637151497804107,
   "cost_weights": {
     "false_negative": 5,

@@ -23,7 +23,7 @@ Health Statistics, CDC — <https://wwwn.cdc.gov/nchs/nhanes/>. NHANES data are 
 U.S. government work in the public domain.
 
 ```bash
-# from heart/tabular/ — downloads the raw .xpt files into data/raw/ (cached, not in git)
+# from models/heart/tabular/ — downloads the raw .xpt files into data/raw/ (cached, not in git)
 python data/build_heart_nhanes.py
 ```
 

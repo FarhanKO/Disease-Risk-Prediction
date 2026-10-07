@@ -1,6 +1,6 @@
 # Chest X-ray Dataset — Data Notes
 
-The images behind `notebook/Lung_Xray.ipynb` and `src/`: **18,036 chest X-rays,
+The images behind `notebooks/Lung_Xray.ipynb` and `src/`: **18,036 chest X-rays,
 224 × 224, in 6 classes (Covid-19, Emphysema, Normal, Pneumonia-Bacterial,
 Pneumonia-Viral, Tuberculosis)**, already split into train / val / test folders.
 It is a Kaggle compilation of two public datasets, which are themselves built from

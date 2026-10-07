@@ -2,7 +2,7 @@
 data.py — Data loading, feature engineering, and preprocessing for the heart
 disease tabular module (HEART_NHANES.csv, see data/README.md).
 
-Everything here mirrors notebook/Heart_Diseases.ipynb exactly, so models trained
+Everything here mirrors notebooks/Heart_Diseases.ipynb exactly, so models trained
 by src/train.py and by the notebook are interchangeable.
 """
 

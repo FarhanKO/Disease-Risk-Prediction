@@ -1,6 +1,6 @@
 """
 data.py — Class list, split loading and single-image preprocessing for the 12-lead ECG
-module. Mirrors load_image() in notebook/Heart_ECG.ipynb, so the saved checkpoints get
+module. Mirrors load_image() in notebooks/Heart_ECG.ipynb, so the saved checkpoints get
 exactly the input they were trained on.
 
 Dataset layout, built by data/build_ecg_dataset.py (one folder per class in each split):
@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 from PIL import Image
 
-from common.image import open_image
+from common.preprocessing.image import open_image
 
 MODULE_DIR = Path(__file__).resolve().parent.parent
 DEFAULT_DATA_DIR = MODULE_DIR / "data"

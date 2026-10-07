@@ -22,7 +22,7 @@ supply only the 21 raw columns in src.data.RAW_INPUT_COLUMNS (see data/README.md
     from src.predict import predict
     result = predict(patient)      # common.Prediction: status, label, probability, positive, explanation
 
-CLI (from lung/tabular/):
+CLI (from models/lung/tabular/):
     python -m src.predict --input examples/patient.json
 """
 

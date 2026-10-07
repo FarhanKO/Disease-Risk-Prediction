@@ -24,7 +24,7 @@ saved pipelines.
     from src.predict import predict
     result = predict(patient)      # common.Prediction: status, label, probability, positive, explanation
 
-CLI (from kidney/tabular/):
+CLI (from models/kidney/tabular/):
     python -m src.predict --input examples/patient.json
 """
 

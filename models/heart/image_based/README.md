@@ -1,9 +1,9 @@
-# Heart Disease — Image-Based Module (ECG)
+# Heart Disease — Image-Based Module (12-lead ECG)
 
 Classifies a 12-lead ECG printout into four categories: **Abnormal Heartbeat,
 History of MI, Myocardial Infarction, Normal**. Part of the
 `disease-risk-prediction` monorepo (heart / kidney / lung, each with tabular +
-image submodules). Built to mirror `lung/image_based`.
+image submodules). Built to mirror `models/lung/image_based`.
 
 ## What it does
 
@@ -34,7 +34,7 @@ image submodules). Built to mirror `lung/image_based`.
 ```
 image_based/
 ├── requirements.txt
-├── notebook/Heart_ECG.ipynb      # the full pipeline: audit, EDA, training, evaluation, Grad-CAM, cascade
+├── notebooks/Heart_ECG.ipynb      # the full pipeline: audit, EDA, training, evaluation, Grad-CAM, cascade
 ├── src/                          # the notebook's inference code, importable
 │   ├── data.py                   # class list, load_image() (crop + resize), split loader
 │   ├── predict.py                # the shared predict() / predict_batch() interface (common/image.py)
@@ -78,7 +78,7 @@ loaded, not retrained. Start Jupyter with `RETRAIN=1` to retrain everything.
 ## Usage
 
 The notebook trains the models; `src/` serves them. From this folder
-(`heart/image_based/`):
+(`models/heart/image_based/`):
 
 ```bash
 python -m src.predict --image ecg1.png ecg2.jpg --heatmap-dir out/   # prints the cascade result, saves Grad-CAM overlays

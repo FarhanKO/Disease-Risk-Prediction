@@ -1,6 +1,6 @@
 """
 train.py — Trains the lung disease (COPD) cascade and saves its artifacts under the
-names notebook/Lung_Disease.ipynb uses, so either can produce what predict.py serves:
+names notebooks/Lung_Disease.ipynb uses, so either can produce what predict.py serves:
 
     Stage 1 (Anomaly Gate):   models/lung_copd_anomaly_gate.joblib
     Stage 2 (Classification): models/lung_copd_calibrated_model.joblib
@@ -18,7 +18,7 @@ The notebook benchmarks 17 models. Until it has been run, the deployed model com
 `--compare`: Logistic Regression against the strongest CPU challengers, with the
 notebook's grids (GPU models are benchmark-only and are not trained by this script).
 
-CLI (from lung/tabular/):
+CLI (from models/lung/tabular/):
     python -m src.train
     python -m src.train --compare --n-jobs 6
 """

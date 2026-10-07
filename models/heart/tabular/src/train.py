@@ -6,7 +6,7 @@ train.py — Reproduces the notebook's deployed model and saves both cascade art
     Threshold + features:     models/metadata.json   (test metrics are added by evaluate.py)
     Typical patient:          models/reference_profile.json   (what predict.py's explanations compare with)
 
-Steps, as in notebook/Heart_Diseases.ipynb:
+Steps, as in notebooks/Heart_Diseases.ipynb:
     1. Tune each candidate on 5-fold CV PR-AUC; SMOTENC on/off is part of every grid.
     2. One-standard-error rule: the simplest candidate within one SE of the best CV PR-AUC.
     3. Isotonic calibration (CalibratedClassifierCV, cv=3).
@@ -17,7 +17,7 @@ The notebook benchmarks 17 models; its winner is Logistic Regression, the defaul
 --compare adds the strongest CPU challengers from the notebook (GPU models are
 benchmark-only and are not trained by this script).
 
-CLI (from heart/tabular/):
+CLI (from models/heart/tabular/):
     python -m src.train
     python -m src.train --compare --n-jobs 8
 """

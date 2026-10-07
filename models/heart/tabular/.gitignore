@@ -26,8 +26,8 @@ data/raw/
 # Scratch files written by CatBoost / pytabkit during training
 catboost_info/
 rtdl_checkpoints/
-notebook/catboost_info/
-notebook/rtdl_checkpoints/
+notebooks/catboost_info/
+notebooks/rtdl_checkpoints/
 
 # Logs
 *.log

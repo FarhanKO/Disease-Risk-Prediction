@@ -8,7 +8,7 @@ out-of-fold TRAINING predictions); it is never re-tuned on the test set here.
 Test metrics and intervals are written back into metadata.json, and permutation
 importance to results/permutational_feature_importance.csv.
 
-CLI (from heart/tabular/):
+CLI (from models/heart/tabular/):
     python -m src.evaluate
 """
 

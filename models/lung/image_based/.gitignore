@@ -24,8 +24,9 @@ env/
 *.keras
 *.h5
 
-# Dataset — see README
-data/
+# Dataset images (~18k files, on Google Drive) - see data/README.md; the README stays in git
+data/*
+!data/README.md
 
 # Logs
 *.log

@@ -5,7 +5,7 @@ Pneumonia-Bacterial, Pneumonia-Viral, Tuberculosis**. Part of the
 `disease-risk-prediction` monorepo (heart / kidney / lung, each with tabular +
 image submodules).
 
-Ported from `notebook/Lung_Xray.ipynb`, refactored into an importable,
+Ported from `notebooks/Lung_Xray.ipynb`, refactored into an importable,
 CLI-capable package. The notebook is retained for EDA only — `src/` is the
 canonical pipeline.
 
@@ -32,7 +32,7 @@ canonical pipeline.
 ```
 image_based/
 ├── requirements.txt
-├── notebook/Lung_Xray.ipynb   # EDA + original experiments — not the canonical pipeline
+├── notebooks/Lung_Xray.ipynb   # EDA + original experiments — not the canonical pipeline
 ├── src/
 │   ├── data.py       # class list, tf.data loaders, augmentation, class weights, load_image()
 │   ├── models.py     # architectures, fine-tune helper, checkpoint registry, embeddings
@@ -49,7 +49,7 @@ image_based/
 
 **Checkpoints.** The seven `.keras` files (~700 MB total; the largest are over
 GitHub's 100 MB limit) are not in git. Download them from
-[Hugging Face](https://huggingface.co/FarhanKO/lung-disease-prediction)
+[Google Drive](https://drive.google.com/drive/folders/16-xnF2kkFHDjFObZEXpDXa0mAJp3zXtf)
 into `models/`:
 
 ```
@@ -77,7 +77,7 @@ Put it at `data/` or pass `--data-dir` to any command.
 
 ## Usage
 
-Run from this folder (`lung/image_based/`):
+Run from this folder (`models/lung/image_based/`):
 
 ```bash
 pip install -r requirements.txt

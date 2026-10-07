@@ -1,7 +1,7 @@
 """
 predict.py — Cascade inference for the kidney CT module, behind the interface all six
 modules share (common.image.ImageModel). This is the module Streamlit and the top-level
-cascade import. Extracted from the clinical pipeline in notebook/Kidney_CT.ipynb, which
+cascade import. Extracted from the clinical pipeline in notebooks/Kidney_CT.ipynb, which
 trains the models and writes everything this file loads.
 
 Every image passes through the cascade — there is no non-cascade path:
@@ -17,7 +17,7 @@ Every image passes through the cascade — there is no non-cascade path:
     from src.predict import predict
     result = predict("slice.png")  # common.Prediction: status, label, probability, positive, explanation
 
-CLI (from kidney/image_based/):
+CLI (from models/kidney/image_based/):
     python -m src.predict --image slice1.png slice2.jpg --heatmap-dir out/
 """
 

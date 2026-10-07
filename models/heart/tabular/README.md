@@ -17,12 +17,12 @@ caveats (self-reported diagnosis, cross-sectional design) are in
 [`data/README.md`](data/README.md). The CSV is rebuilt from the CDC servers with:
 
 ```bash
-python data/build_heart_nhanes.py      # from heart/tabular/; caches raw .xpt files in data/raw/
+python data/build_heart_nhanes.py      # from models/heart/tabular/; caches raw .xpt files in data/raw/
 ```
 
 ## What the notebook does
 
-`notebook/Heart_Diseases.ipynb` is the full pipeline, cell for cell the same
+`notebooks/Heart_Diseases.ipynb` is the full pipeline, cell for cell the same
 workflow as the kidney and lung notebooks:
 
 - **7 engineered features:** pulse pressure, non-HDL cholesterol, total/HDL
@@ -92,7 +92,7 @@ tabular/
 │   ├── HEART_NHANES.csv
 │   ├── README.md               # data dictionary
 │   └── raw/                    # cached NHANES .xpt files (gitignored)
-├── notebook/
+├── notebooks/
 │   └── Heart_Diseases.ipynb    # training, evaluation, explainability, cascade
 ├── models/
 │   ├── heart_disease_calibrated_model.joblib   # Stage 2: calibrated classifier
@@ -117,9 +117,9 @@ pip install -r requirements.txt
 python data/build_heart_nhanes.py        # rebuild the dataset from CDC NHANES
 
 # Full analysis: 17 models, plots, observations (several hours, GPU recommended)
-jupyter nbconvert --to notebook --execute --inplace notebook/Heart_Diseases.ipynb
+jupyter nbconvert --to notebook --execute --inplace notebooks/Heart_Diseases.ipynb
 
-# Or just the deployed model, from heart/tabular/ (minutes, CPU only)
+# Or just the deployed model, from models/heart/tabular/ (minutes, CPU only)
 python -m src.train                      # add --compare to also tune LightGBM / XGBoost / CatBoost / EBM
 python -m src.evaluate                   # adds test metrics to models/metadata.json
 python -m src.predict --input examples/patient.json

@@ -14,16 +14,16 @@ the NHANES variables behind every column and the caveats (self-reported diagnosi
 the 2017 change in question wording) are in [`data/README.md`](data/README.md).
 
 ```bash
-python data/build_copd_nhanes.py      # from lung/tabular/; caches raw .xpt files in data/raw/
+python data/build_copd_nhanes.py      # from models/lung/tabular/; caches raw .xpt files in data/raw/
 ```
 
 ## Status
 
-- `notebook/Lung_Disease.ipynb` is the full analysis: 17 models, calibration,
+- `notebooks/Lung_Disease.ipynb` is the full analysis: 17 models, calibration,
   threshold, SHAP, clustering and anomaly detection, cell for cell the same
   workflow as the heart and kidney notebooks. **It has been run end to end**
   (2026-10-01), with every observation cell written from its outputs. Tuned
-  models are cached in `notebook/grid_cache/` (not in git), so a re-run takes about
+  models are cached in `notebooks/grid_cache/` (not in git), so a re-run takes about
   25 minutes. Set `RERUN_GRID=1` to tune everything again (about 2.5 hours with
   `N_JOBS=3`).
 - The notebook and `python -m src.train --compare` select the same model
@@ -47,7 +47,7 @@ python data/build_copd_nhanes.py      # from lung/tabular/; caches raw .xpt file
 
 ## Results
 
-From `notebook/Lung_Disease.ipynb` (full table in `results/model_comparison.csv`).
+From `notebooks/Lung_Disease.ipynb` (full table in `results/model_comparison.csv`).
 Test set: 4,905 patients never used for training or tuning (486 with COPD).
 
 | Model | CV PR-AUC (± SE) | Test PR-AUC | Test ROC-AUC |
@@ -95,7 +95,7 @@ tabular/
 │   ├── COPD_NHANES.csv
 │   ├── README.md               # data dictionary
 │   └── raw/                    # cached NHANES .xpt files (gitignored)
-├── notebook/
+├── notebooks/
 │   └── Lung_Disease.ipynb      # full analysis: 17 models, calibration, SHAP, clustering, anomalies, cascade
 ├── models/
 │   ├── lung_copd_calibrated_model.joblib   # Stage 2: calibrated classifier
@@ -115,7 +115,7 @@ tabular/
 
 ## Usage
 
-From this folder (`lung/tabular/`):
+From this folder (`models/lung/tabular/`):
 
 ```bash
 pip install -r requirements.txt

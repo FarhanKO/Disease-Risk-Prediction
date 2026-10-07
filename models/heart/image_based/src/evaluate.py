@@ -1,12 +1,12 @@
 """
-evaluate.py — Checks that src/ serves exactly what notebook/Heart_ECG.ipynb evaluated:
+evaluate.py — Checks that src/ serves exactly what notebooks/Heart_ECG.ipynb evaluated:
 re-scores the test split through the same cascade code predict.py uses, and compares the
 test metrics, the confidence coverage and the OOD gate's rejection rate with the values
 the notebook saved in models/metadata.json. Writes nothing; exits 1 on a mismatch.
 
 The models are trained by the notebook (see the README), not by a script here.
 
-CLI (from heart/image_based/, after `python data/build_ecg_dataset.py`):
+CLI (from models/heart/image_based/, after `python data/build_ecg_dataset.py`):
     python -m src.evaluate
     python -m src.evaluate --ensemble
 """
@@ -14,7 +14,7 @@ CLI (from heart/image_based/, after `python data/build_ecg_dataset.py`):
 import argparse
 import sys
 
-from common.evaluation import compare_with_notebook
+from common.evaluation.image import compare_with_notebook
 
 from .data import DEFAULT_DATA_DIR, load_split
 from .predict import MODEL

@@ -6,7 +6,7 @@ score, the Stage 1 gate's rejection rates, SHAP and permutation importance.
 The threshold is NOT re-tuned here: train.py chose it on out-of-fold training
 predictions, and tuning it on the test set would make these numbers optimistic.
 
-CLI (run from kidney/tabular/):
+CLI (run from models/kidney/tabular/):
     python -m src.evaluate
     python -m src.evaluate --importance-out results/permutational_feature_importance.csv
 """

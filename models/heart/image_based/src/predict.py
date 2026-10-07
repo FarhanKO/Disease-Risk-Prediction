@@ -1,7 +1,7 @@
 """
 predict.py — Cascade inference for the 12-lead ECG module, behind the interface all six
 modules share (common.image.ImageModel). This is the module Streamlit and the top-level
-cascade import. Extracted from the clinical pipeline in notebook/Heart_ECG.ipynb, which
+cascade import. Extracted from the clinical pipeline in notebooks/Heart_ECG.ipynb, which
 trains the models and writes everything this file loads.
 
 Every image passes through the cascade — there is no non-cascade path:
@@ -17,7 +17,7 @@ Every image passes through the cascade — there is no non-cascade path:
     from src.predict import predict
     result = predict("ecg.png")    # common.Prediction: status, label, probability, positive, explanation
 
-CLI (from heart/image_based/):
+CLI (from models/heart/image_based/):
     python -m src.predict --image ecg1.png ecg2.jpg --heatmap-dir out/
 """
 
