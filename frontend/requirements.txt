@@ -1,2 +1,17 @@
-# The front end; the models also need each module's own requirements.txt
+# The front end and the tabular models it serves. Streamlit Cloud installs this file
+# (the nearest requirements.txt above frontend/app/streamlit_app.py), so it must list
+# everything the app imports and every library the committed .joblib pickles reference.
+# Pinned to the versions that saved the pickles: sklearn pickles break across versions.
 streamlit>=1.50
+numpy>=2.0
+pandas==3.0.3
+scikit-learn==1.8.0
+imbalanced-learn==0.14.1
+lightgbm==4.7.0
+catboost==1.2.10
+interpret-core==0.7.8
+joblib
+pillow
+
+# Image models are not served here: their .keras checkpoints are not in git. To serve
+# them, add keras>=3.8 and torch (heart, kidney) / tensorflow (lung) and ship the checkpoints.
