@@ -1,6 +1,6 @@
 # Kidney CT Dataset — Data Notes
 
-The images behind `notebook/Kidney_CT.ipynb`: **11,929 unique kidney CT slices
+The images behind `notebooks/Kidney_CT.ipynb`: **11,929 unique kidney CT slices
 from 189 CT scans, in 4 classes (Cyst, Normal, Stone, Tumor)**, split by scan
 into train / val / test so that no patient scan appears in more than one split.
 
