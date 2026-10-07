@@ -36,7 +36,6 @@ common/        shared code: registry.py (one entry point), cascade.py, predictio
 frontend/      app/ (the Streamlit page), components/ (form fields), assets/ (example patient)
 models/        the six organ models: heart/, kidney/, lung/, each with tabular/ and image_based/
 triage/        tabular/: the layer-1 symptom router
-research/      earlier exploratory notebooks, per organ
 tests/         pytest smoke tests: common/, heart/, kidney/, lung/, triage/
 ```
 
